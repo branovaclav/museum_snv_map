@@ -1,0 +1,69 @@
+/* --- Actions --- */
+.actions {
+	display: flex;
+
+	a {
+		min-width: 56px;
+		height: 56px;
+		padding: 14px;
+		box-sizing: border-box;
+
+		font: $light 2.5rem/1.33 'Relish Pro';
+		color: $light-text-color;
+
+		&.selected {
+			color: $regular-text-color;
+			font: $semibold 2.6rem/1.33 'Relish Pro';
+		}
+
+		&.disabled {
+			opacity: .2;
+			cursor: default;
+		}
+	}
+
+	.icon {
+		background: url('/images/icons_act.svg') no-repeat;
+		border-radius: 50%;
+		transition: background-color $fast;
+
+		&.home { background-position: 0 0; }
+		&.close { background-position: 0 -60px; }
+		&.back { background-position: 0 -120px; }
+		&.forward { background-position: 0 -180px; }
+
+		&:active { background-color: rgba($accent-color-yellow, .25); }
+	}
+}
+
+/* --- Colors --- */
+$colors: (
+	fauna: $accent-color-red,
+	flora: $accent-color-yellow,
+	reserves: $accent-color-green,
+	waters: $accent-color-blue,
+	geology: $accent-color-brown
+);
+
+@each $key, $value in $colors {
+	[data-map="#{ $key }"],
+	[data-group="#{ $key }"] {
+		.colored {
+			background-color: $value;
+
+			&.fill { fill: $value; }
+			&.stroke { stroke: $value; }
+		};
+
+		&::before, &::after {
+			background-color: $value;
+			background-position: -#{ (index($colors, ($key $value)) - 1) * 100 }px 0;
+		}
+	}
+}
+
+/* --- Animations --- */
+@keyframes pulse {
+	from { transform: scale(1); opacity: .6; }
+	to { transform: scale(1.67); opacity: 0; }
+}
