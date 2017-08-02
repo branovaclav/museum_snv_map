@@ -1,5 +1,11 @@
 import React from 'react'
 
+const Detail = props => (
+	<section className={ `detail ${ props.maximized  && 'maximized' }` }>
+		{ props.children }
+	</section>
+)
+
 const PoiHeadline = props => (
 	<h1 className="headline" data-map={ props.map }>{ props.title[ props.lang ] }</h1>
 )
@@ -23,13 +29,28 @@ const Gallery = props => (
 				<li><a className="back"><span className="icon back"></span></a></li>
 				<li><a className="forward"><span className="icon forward"></span></a></li>
 			</ul>
-			<ul className="images"></ul>
+			<ul className="images">
+				{ props.image &&
+					<li>
+						<img src={ `${ props.path.images }/${ props.files[ props.image ] }` } />
+					</li>
+				}
+			</ul>
 		</div>
-		<ul className="thumbnails"></ul>
+		<ul className="thumbnails">
+			{ props.files.map((file, image) => (
+				<li key={ image }>
+					<a className={ image == props.image && 'selected' } onClick={ () => props.onClick(image) }>
+						<img src={ `${ props.path.thumbnails }/${ file }` } />
+					</a>
+				</li>
+			))}
+		</ul>
 	</div>
 )
 
 export {
+	Detail,
 	PoiHeadline,
 	PoiDescription,
 	Actions,

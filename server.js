@@ -40,7 +40,9 @@ const db = new loki('data/db.js', {
 	}
 });
 
+app.use('/data', express.static( path.join(root, 'data') ));
 app.use(express.static( path.join(root, 'src') ));
+
 app.use(parser.json());
 app.set('view engine', 'ejs');
 app.set('views', path.join(root, 'src', 'views'));
@@ -49,12 +51,14 @@ app.set('views', path.join(root, 'src', 'views'));
 app.get('/data.js', (req, res) => {
 	res.render('data.ejs', { pois: data.pois.sorted, articles: data.articles.all, maps: constants.maps, regions: constants.regions, /*locale: locales[lang],*/ lang });
 });
-
+/*
 app.get('/lang/:lang', (req, res) => {
 	lang = req.params.lang;
 	data.pois.sorted = data.pois.collection.chain().sort(abcsort).data();
 	res.redirect('/');
 });
+*/
+
 
 //admin
 app.get('/admin', (req, res) => {

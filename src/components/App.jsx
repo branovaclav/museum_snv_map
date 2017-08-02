@@ -1,36 +1,42 @@
 import React from 'react';
 
-import { Sidebar, Detail, Titlebar, Content } from './Common'
+import { Titlebar, Content } from './Common'
 import { Map, Image, Regions, Pois } from './Map'
-import { ArticleHeadline, ArticleDescription, RegionList, MapList } from './Sidebar'
-import { PoiHeadline, PoiDescription, Actions, Gallery } from './Detail'
+import { Sidebar, ArticleHeadline, ArticleDescription, RegionList, MapList } from './Sidebar'
+import { Detail, PoiHeadline, PoiDescription, Actions, Gallery } from './Detail'
 import Toolbar from './Toolbar'
+
+const path = {
+	images: '/data/images',
+	thumbnails: '/data/images/thumbnails'
+}
 
 export default class App extends React.Component {
 	constructor() {
 		super()
 		this.state = {
 			region: null,
-			map: 'fauna',
-			poi: null,
+			map: null,
+			poi: 4,
+			image: null,
 			view: {},
 			lang: 'sk'
 		}
 		this.views = {}
-
-		const padding = 50
-		this.viewport = {
-			left: padding,
-			top: padding,
-			width: window.innerWidth - 586 - (2 * padding),
-			height: window.innerHeight - (2 * padding)
-		}
 	}
 
 	getView(elem, region) {
+		const viewportPadding = 50
+		const viewport = {
+			left: viewportPadding,
+			top: viewportPadding,
+			width: window.innerWidth - 586 - (2 * viewportPadding),
+			height: window.innerHeight - (2 * viewportPadding)
+		}
+
 		if (region) { //region
 			const box = elem.getBBox();
-			const scale = Math.min(this.viewport.width / box.width, this.viewport.height / box.height)
+			const scale = Math.min(viewport.width / box.width, viewport.height / box.height)
 			const map = document.getElementById('map')
 
 			this.views[region] = {
@@ -40,8 +46,8 @@ export default class App extends React.Component {
 					top: (box.y + box.height / 2) / map.offsetHeight
 				},
 				scroll: {
-					left: (map.offsetLeft + box.x) + (1 - scale) * box.width / 2 - this.viewport.left - (this.viewport.width - box.width * scale) / 2,
-					top: (map.offsetTop + box.y) + (1 - scale) * box.height / 2 - this.viewport.top - (this.viewport.height - box.height * scale) / 2,
+					left: (map.offsetLeft + box.x) + (1 - scale) * box.width / 2 - viewport.left - (viewport.width - box.width * scale) / 2,
+					top: (map.offsetTop + box.y) + (1 - scale) * box.height / 2 - viewport.top - (viewport.height - box.height * scale) / 2,
 				}
 			}
 		}
@@ -50,8 +56,8 @@ export default class App extends React.Component {
 				scale: null,
 				origin: null,
 				scroll: {
-					left: elem.offsetLeft - this.viewport.left - (this.viewport.width - elem.offsetWidth) / 2,
-					top: elem.offsetTop - this.viewport.top - (this.viewport.height - elem.offsetHeight) / 2
+					left: elem.offsetLeft - viewport.left - (viewport.width - elem.offsetWidth) / 2,
+					top: elem.offsetTop - viewport.top - (viewport.height - elem.offsetHeight) / 2
 				}
 			}
 		}
@@ -63,11 +69,15 @@ export default class App extends React.Component {
 	}
 
 	setMap(map) {
-		this.setState({ map: map || 'fauna' })
+		this.setState({ map })
 	}
 
 	setPoi(poi) {
 		this.setState({ poi })
+	}
+
+	setImage(image) {
+		this.setState({ image })
 	}
 
 	handleHomeClick() {
@@ -82,7 +92,7 @@ export default class App extends React.Component {
 
     render() {
 		const defaultMapType = { sk: 'FIXME', en: 'FIXME' }
-		let { region, map, poi, view, lang } = this.state
+		let { region, map, poi, image, view, lang } = this.state
 
 		let article = data.articles[ region || 'global' ][ map || 'global' ]
 		if (article.title[lang].length == 0 && article.description.length == 0)
@@ -93,12 +103,12 @@ export default class App extends React.Component {
 				<Map view={ view } onRender={ this.getView.bind(this) }>
 					<Image region={ region } map={ map } />
 					<Regions onRender={ this.getView.bind(this) } onClick={ region => this.setRegion(region) } />
-					{ region &&
+					{// region &&
 						<Pois pois={ data.pois } poi={ poi } region={ region } map={ map } scale={ view.scale ? view.scale : 1 } onClick={ poi => this.setPoi(poi) } />
 					}
 				</Map>
 
-				<Sidebar>
+				<Sidebar visible={ image ? false : true }>
 					<Titlebar>
 						<ArticleHeadline title={ article.title } subtitle={ data.maps[ map ] ? data.maps[ map ].type : defaultMapType } lang={ lang } />
 					</Titlebar>
@@ -113,14 +123,14 @@ export default class App extends React.Component {
 				</Sidebar>
 
 				{ poi &&
-					<Detail>
+					<Detail maximized={ image ? true : false }>
 						<Titlebar>
 							<PoiHeadline title={ data.pois[ poi ].title } map={ data.pois[ poi ].map } lang={ lang } />
-							<Actions onCloseClick={ () => this.setPoi() } />
+							<Actions onCloseClick={ () => image ? this.setImage() : this.setPoi() } />
 						</Titlebar>
 						<Content>
 							<PoiDescription text={ data.pois[ poi ].description } lang={ lang } />
-							<Gallery />
+							<Gallery files={ data.pois[ poi ].files } image={ image } path={ path } onClick={ image => this.setImage(image) } />
 						</Content>
 					</Detail>
 				}

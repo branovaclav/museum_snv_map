@@ -8,7 +8,7 @@ import $ from 'jquery'
 
 const Image = props => (
 	<g className="map">
-		{ maps[ props.map ]() }
+		{ maps[ props.map || 'fauna' ]() }
 	</g>
 )
 
@@ -35,7 +35,7 @@ const Pois = props => (
 		{ Object.keys(props.pois).map(poi => {
 			const transform = `translate(${ props.pois[ poi ].position.left }px, ${ props.pois[ poi ].position.top }px) scale(${ 1 / props.scale })`
 			return (
-				<g key={ poi } className={ 'poi' + (poi == props.poi ? ' selected' : '') } onClick={ () => props.onClick(poi) } data-map={ props.pois[ poi ].map } style={{ transform }}>
+				<g key={ poi } className={ `poi ${ poi == props.poi && 'selected' }` } onClick={ () => props.onClick(poi) } data-map={ props.pois[ poi ].map } style={{ transform }}>
 					<circle className="bkg" x="0" y="0" r="35" />
 					<circle className="beacon colored stroke" x="0" y="0" r="26" />
 					<g className="point colored fill" clipPath="url(#svg-clip)">

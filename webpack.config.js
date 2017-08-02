@@ -13,7 +13,7 @@ module.exports = {
 	devServer: {
 		contentBase: path.join(__dirname, 'src'),
 		proxy: [{
-			context: ['/data.js', '/lang', '/admin'],
+			context: ['/data', '/data.js', '/admin'],
 	        target: 'http://localhost:3000'
 		}]
 	},

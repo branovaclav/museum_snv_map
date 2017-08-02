@@ -1,5 +1,11 @@
 import React from 'react';
 
+const Sidebar = props => (
+	<section className={ `sidebar ${ props.visible || 'hidden' }` }>
+		{ props.children }
+	</section>
+)
+
 const ArticleHeadline = props => (
 	<h1 className="headline">
 		<div className="title">{ props.title[ props.lang ] }</div>
@@ -30,7 +36,7 @@ const MapList = props => (
 	<ul className="maps">
 		{ Object.keys(props.maps).map(map => (
 			<li key={ map }>
-				<a className={ 'map' + (map == props.map ? ' selected' : '') } data-map={ map } onClick={ () => props.onClick(map) }>
+				<a className={ `map ${ map == props.map && 'selected' }` } data-map={ map } onClick={ () => props.onClick(map) }>
 					{ props.maps[map].title[props.lang] }
 				</a>
 			</li>
@@ -39,6 +45,7 @@ const MapList = props => (
 )
 
 export {
+	Sidebar,
 	ArticleHeadline,
 	ArticleDescription,
 	RegionList,
