@@ -1,22 +1,25 @@
 let data = {
-	<% for (let poi of pois) { %>
-		<%= poi.$loki %>: {
-			title: '<%- poi.title[lang] %>',
-			description: '<%- poi.description[lang] %>',
-			group:  '<%- poi.group %>',
-			region: '<%- poi.region %>',
-			files: [<%- poi.files.map(file => `'${ file }'`).join(', ') %>]
-		},
-	<% } %>
+	pois: {
+		<% for (let poi of pois) { %>
+			<%= poi.$loki %>: {
+				position: <%- JSON.stringify(poi.position) %>,
+				title: <%- JSON.stringify(poi.title) %>,
+				description: <%- JSON.stringify(poi.description) %>,
+				map:  '<%- poi.map %>',
+				region: '<%- poi.region %>',
+				files: [<%- poi.files.map(file => `'${ file }'`).join(', ') %>]
+			},
+		<% } %>
+	},
 
 	articles: {
-		<% for (let group in groups) { %>
-			<%= group %>: {
-				<% for (let region of ['global'].concat(Object.keys(regions))) { %>
-					<%= region %>: {
-						<% let article = articles.find(article => article.group == group && article.region == region) %>
-						title: '<%- article ? article.title[lang] : '' %>',
-						description: '<%- article ? article.description[lang] : '' %>'
+		<% for (let region of ['global'].concat(Object.keys(regions))) { %>
+			<%= region %>: {
+				<% for (let map of ['global'].concat(Object.keys(maps))) { %>
+					<%= map %>: {
+						<% let article = articles.find(article => article.map == map && article.region == region) %>
+						title: <%- article ? JSON.stringify(article.title) : "{ sk: '', en: '' }" %>,
+						description: <%- article ? JSON.stringify(article.description) : "{ sk: '', en: '' }" %>
 					},
 				<% } %>
 			},
@@ -24,11 +27,7 @@ let data = {
 	},
 
 	maps: <%- JSON.stringify(maps) %>,
-	groups: <%- JSON.stringify(groups) %>,
 	regions: <%- JSON.stringify(regions) %>,
-
-	locale: <%- JSON.stringify(locale) %>,
-	lang: '<%= lang %>'
 };
 
 // console.log(JSON.stringify(data, null, 4));

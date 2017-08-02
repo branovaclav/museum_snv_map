@@ -3,7 +3,7 @@ const parser = require('body-parser');
 const loki = require('lokijs');
 const fs = require('fs');
 const path = require('path')
-const locales = require('./locales');
+// const locales = require('./locales');
 const constants = require('./data/const');
 
 const app = express();
@@ -47,7 +47,7 @@ app.set('views', path.join(root, 'src', 'views'));
 
 //app
 app.get('/data.js', (req, res) => {
-	res.render('data.ejs', { pois: data.pois.sorted, maps: constants.maps, groups: constants.groups, regions: constants.regions, articles: data.articles.all, locale: locales[lang], lang });
+	res.render('data.ejs', { pois: data.pois.sorted, articles: data.articles.all, maps: constants.maps, regions: constants.regions, /*locale: locales[lang],*/ lang });
 });
 
 app.get('/lang/:lang', (req, res) => {
@@ -58,7 +58,7 @@ app.get('/lang/:lang', (req, res) => {
 
 //admin
 app.get('/admin', (req, res) => {
-	res.render('admin.ejs', { pois: data.pois.all, articles: data.articles.all, groups: constants.groups, regions: constants.regions });
+	res.render('admin.ejs', { pois: data.pois.all, articles: data.articles.all, maps: constants.maps, regions: constants.regions });
 });
 
 app.post('/admin/:collection', (req, res) => {

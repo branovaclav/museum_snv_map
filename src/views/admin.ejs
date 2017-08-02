@@ -31,15 +31,15 @@
 				<form class="form">
 					<input type="hidden" name="id">
 					<div>
-						<label>Skupina a región</label>
-						<select name="group">
-							<% for (let group in groups) { %>
-								<option value="<%= group %>"><%= groups[group].title.sk %></option>
-							<% } %>
-						</select>
+						<label>Región a mapa</label>
 						<select name="region">
 							<% for (let region in regions) { %>
 								<option value="<%= region %>"><%= regions[region].title.sk %></option>
+							<% } %>
+						</select>
+						<select name="map">
+							<% for (let map in maps) { %>
+								<option value="<%= map %>"><%= maps[map].title.sk %></option>
 							<% } %>
 						</select>
 					</div>
@@ -74,8 +74,8 @@
 			<table class="table pois">
 				<thead>
 					<tr>
-						<td>Skupina</td>
-						<td>Region</td>
+						<td>Región</td>
+						<td>Mapa</td>
 						<td>Nadpis</td>
 						<td>Priečinok s fotkami</td>
 						<td></td>
@@ -84,11 +84,11 @@
 				<tbody>
 					<% for (let poi of pois.slice(0).reverse()) { %>
 					    <tr class="poi">
-							<td class="group">
-								<%= groups[poi.group].title.sk %>
-							</td>
 							<td class="region">
 								<%= regions[poi.region].title.sk %>
+							</td>
+							<td class="map">
+								<%= maps[poi.map].title.sk %>
 							</td>
 							<td class="title">
 								<%= poi.title.sk %>
@@ -106,21 +106,23 @@
 			</table>
 		</div>
 		<div id="articles" class="panel">
-			<div class="bar groups">
-				<% for (let group in groups) { %>
-					<a class="button" data-group="<%= group %>"><%= groups[group].title.sk %></a>
+			<div class="bar regions">
+				<a class="button" data-region="global">Všetky oblasti</a>
+				<% for (let region in regions) { %>
+					<a class="button" data-region="<%= region %>"><%= regions[region].title.sk %></a>
 				<% } %>
 			</div>
 
-			<div class="bar regions">
-				<a class="button alt" data-region="global">Všetky oblasti</a>
-				<% for (let region in regions) { %>
-					<a class="button alt" data-region="<%= region %>"><%= regions[region].title.sk %></a>
+			<div class="bar maps">
+				<a class="button alt" data-map="global">Všetky mapy</a>
+				<% for (let map in maps) { %>
+					<a class="button alt" data-map="<%= map %>"><%= maps[map].title.sk %></a>
 				<% } %>
 			</div>
+
 			<form class="form">
 				<input type="hidden" name="id">
-				<input type="hidden" name="group">
+				<input type="hidden" name="map">
 				<input type="hidden" name="region">
 				<div>
 					<label>Nadpis (slovensky)</label>

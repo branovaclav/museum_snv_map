@@ -115,7 +115,7 @@ label {
 	}
 }
 
-.groups,
+.maps,
 .regions {
 	.button:not(.selected) {
 		background-color: white;
@@ -152,7 +152,7 @@ label {
 
 	.form {
 		.labels label,
-		[name="group"], [name="region"], [name="folder"], [name="position"] {
+		[name="map"], [name="region"], [name="folder"], [name="position"] {
 			display: inline-block;
 			width: calc(50% - 4px);
 		}

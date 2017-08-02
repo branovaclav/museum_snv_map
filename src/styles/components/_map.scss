@@ -14,14 +14,6 @@
 		height: 100%;
 	}
 
-	.maps {
-		&[data-map="fauna"] { fill: rgba($accent-color-red, .42); }
-		&[data-map="flora"] { fill: rgba($accent-color-yellow, .42); }
-		&[data-map="reserves"] { fill: rgba($accent-color-green, .42); }
-		&[data-map="waters"] { fill: rgba($accent-color-blue, .42); }
-		&[data-map="geology"] { fill: rgba($accent-color-brown, .42); }
-	}
-
 	.regions {
 		fill: rgba(white, 0);
 		stroke-width: 1px;
@@ -31,6 +23,8 @@
 	.pois {
 		.poi {
 			cursor: pointer;
+			transition: transform $slow;
+
 			& > * { transition: transform $fast; }
 
 			.bkg {

@@ -59,7 +59,7 @@ let Collection = class {
 				sk: fields.description_sk.value,
 				en: fields.description_en.value
 			},
-			group: fields.group.value,
+			map: fields.map.value,
 			region: fields.region.value,
 		};
 		if (fields.position && fields.folder)
@@ -80,22 +80,22 @@ let Articles = class extends Collection {
 		super()
 
 		Object.assign(this.el, {
-			groups: $('#articles .groups a'),
+			maps: $('#articles .maps a'),
 			regions: $('#articles .regions a')
 		});
 
-		this.el.groups.add(this.el.regions).on('click', evt => this.toggle( $(evt.target) ))
-			.filter(this.el.groups.first().add(this.el.regions.first())).click();
+		this.el.maps.add(this.el.regions).on('click', evt => this.toggle( $(evt.target) ))
+			.filter(this.el.maps.first().add(this.el.regions.first())).click();
 
 		this.el.btn.submit.on('click', () => this.send('submit'));
 	}
 
 	toggle (link) {
-		let type = link.is(this.el.groups) ? 'group' : 'region';
+		let type = link.is(this.el.maps) ? 'map' : 'region';
 		let fields = this.el.form.prop('elements');
 		fields[type].value = link.data(type);
 
-		let article = data.articles.find(article => article.group == fields.group.value && article.region == fields.region.value);
+		let article = data.articles.find(article => article.map == fields.map.value && article.region == fields.region.value);
 
 		fields.id.value = article ? article.$loki : '';
 		['title_sk', 'title_en', 'description_sk', 'description_en'].forEach(field => fields[field].value = article ? article[field.split('_')[0]][field.split('_')[1]] : '');
@@ -126,7 +126,7 @@ let Pois = class extends Collection {
 
 		let poi = data.pois.find(poi => poi.$loki == id);
 		fields.id.value = poi ? poi.$loki : '';
-		['group', 'region', 'folder'].forEach(field => fields[field].value = poi ? poi[field] : '');
+		['map', 'region', 'folder'].forEach(field => fields[field].value = poi ? poi[field] : '');
 		['title_sk', 'title_en', 'description_sk', 'description_en'].forEach(field => fields[field].value = poi ? poi[field.split('_')[0]][field.split('_')[1]] : '');
 		fields.position.value = poi ? `${ poi.position.left },${ poi.position.top }` : '';
 	}

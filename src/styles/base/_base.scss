@@ -43,8 +43,8 @@ $accent-color-brown: rgb(194, 171, 171);
 html {
 	font-size: 62.5%; /* maps '1rem' to '10px' */
 	background: $page-bkg-color url(/images/bkg.png);
-	width: 200%; //canvas
-	height: 200%;
+	width: 400%; //canvas
+	height: 400%;
 	position: relative;
 }
 
@@ -65,11 +65,16 @@ body {
 	-webkit-user-drag: none;
 	-webkit-tap-highlight-color: transparent;
 
-	// &.lock { overflow: hidden; }
+	#root {
+		height: 100%;
+	}
 
-	// display: flex;
-	// align-items: center;
-	// justify-content: center;
+	#app {
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 }
 
 /* --- Reset --- */
