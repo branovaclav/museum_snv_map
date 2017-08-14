@@ -3,8 +3,8 @@
     "version": "1.0.0",
     "description": "Spiš v kocke: Mapa oblastí Spiša",
     "repository": {
-		"type": "git",
-    	"url": "https://github.com/branovaclav/museum_snv_map.git"
+        "type": "git",
+        "url": "https://github.com/branovaclav/museum_snv_map.git"
     },
     "scripts": {
         "start": "node server.js",
@@ -23,6 +23,7 @@
         "jquery": "^3.2.1",
         "lokijs": "^1.5.0",
         "react": "^15.6.1",
+        "react-addons-css-transition-group": "^15.6.0",
         "react-dom": "^15.6.1"
     },
     "devDependencies": {

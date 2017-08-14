@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom'
+import Transition from 'react-addons-css-transition-group';
 
 import * as maps from './maps'
 import * as regions from './regions'
@@ -31,11 +32,12 @@ class Regions extends React.Component {
 }
 
 const Pois = props => (
-	<g className="pois">
+	<Transition component="g" className="pois" transitionName={ props.anim.name } transitionEnterTimeout={ props.anim.enter } transitionLeaveTimeout={ props.anim.leave }>
 		{ Object.keys(props.pois).map(poi => {
-			const transform = `translate(${ props.pois[ poi ].position.left }px, ${ props.pois[ poi ].position.top }px) scale(${ 1 / props.scale })`
+			const point = props.pois[ poi ]
+			const transform = `translate(${ point.position.left }px, ${ point.position.top }px) scale(${ 1 / props.scale })`
 			return (
-				<g key={ poi } className={ `poi ${ poi == props.poi && 'selected' }` } onClick={ () => props.onClick(poi) } data-map={ props.pois[ poi ].map } style={{ transform }}>
+				<g key={ poi } className={ `poi ${ poi == props.poi ? 'selected' : '' }` } onClick={ () => props.onClick(poi) } data-map={ point.map } style={{ transform }}>
 					<circle className="bkg" x="0" y="0" r="35" />
 					<circle className="beacon colored stroke" x="0" y="0" r="26" />
 					<g className="point colored fill" clipPath="url(#svg-clip)">
@@ -45,7 +47,7 @@ const Pois = props => (
 				</g>
 			)
 		})}
-	</g>
+	</Transition>
 )
 
 class Map extends React.Component {

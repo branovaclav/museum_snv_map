@@ -32,7 +32,7 @@
 		&.back { background-position: 0 -120px; }
 		&.forward { background-position: 0 -180px; }
 
-		&:active { background-color: rgba($accent-color-yellow, .25); }
+		&:not(.disabled):active { background-color: rgba($accent-color-yellow, .25); }
 	}
 }
 

@@ -21,6 +21,19 @@
 		margin: 40px;
 		margin-top: 0;
 	}
+
+	&.maximized {
+		width: calc(100vw - 2 * 25px);
+
+		.content {
+			p { max-height: 0; }
+			.photo { height: calc(100vh - (2 * 25px) - 106px - 25px - 116px - 40px); }
+		}
+	}
+
+	&.hidden {
+		transform: translate(0, calc(100% + 26px));
+	}
 }
 
 .detail .titlebar {
@@ -82,28 +95,14 @@
 				position: absolute;
 				width: 100%;
 				height: 100%;
-
-				animation-duration: $medium;
-				animation-fill-mode: forwards;
-				will-change: transform, opacity;
+				transition: opacity $medium;
 
 				img {
 					height: 100%;
 					margin: auto;
 				}
 
-				&.fadein { animation-name: fadein; }
-				&.fadeout { animation-name: fadeout; }
-
-				@keyframes fadein {
-				  from { opacity: 0; }
-				  to { opacity: 1; }
-				}
-
-				@keyframes fadeout {
-				  from { opacity: 1; }
-				  to { opacity: 0; }
-				}
+				&.hidden { opacity: 0 }
 			}
 		}
 
@@ -138,6 +137,7 @@
 					}
 
 					&.forward { flex-direction: row-reverse; }
+					&.disabled { display: none; }
 					&:not(.disabled):active {
 						.icon {
 							background-color: rgba($accent-color-yellow, .25);
@@ -150,7 +150,6 @@
 
 	.thumbnails {
 		display: flex;
-		justify-content: center;
 		overflow-x: auto;
 		margin-top: 25px;
 
@@ -174,18 +173,5 @@
 		img {
 			height: 116px;
 		}
-	}
-}
-
-.detail.hidden {
-	transform: translate(0, calc(100% + 26px));
-}
-
-.detail.maximized {
-	width: calc(100vw - 2 * 25px);
-
-	.content {
-		p { max-height: 0; }
-		.photo { height: calc(100vh - (2 * 25px) - 106px - 25px - 116px - 40px); }
 	}
 }

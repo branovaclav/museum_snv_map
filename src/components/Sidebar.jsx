@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Sidebar = props => (
-	<section className={ `sidebar ${ props.visible || 'hidden' }` }>
+	<section className="sidebar">
 		{ props.children }
 	</section>
 )

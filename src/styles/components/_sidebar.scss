@@ -26,6 +26,12 @@
 		display: flex;
 		justify-content: space-between;
 	}
+
+	&.hidden {
+		top: 0;
+		height: 100%;
+		transform: translate(100%, 0);
+	}
 }
 
 .sidebar .content {
@@ -213,10 +219,4 @@
 	.pois.hidden {
 		display: none;
 	}
-}
-
-.sidebar.hidden {
-	top: 0;
-	height: 100%;
-	transform: translate(100%, 0);
 }
