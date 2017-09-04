@@ -11,9 +11,13 @@
 	transition: top $medium, height $medium, transform $medium;
 	z-index: 1;
 
+	.titlebar {
+		padding: 0 0 0 56px;
+	}
+
 	.content {
 		padding: 48px 56px;
-		height: calc(100% - 186px);
+		height: calc(100% - 320px);
 		overflow-y: auto;
 	}
 
@@ -34,21 +38,45 @@
 	}
 }
 
-.sidebar .content {
-	.back {
-		float: left;
-		width: 40px;
-		height: 30px;
-		background: url("/images/icons_act.svg") 0 -240px no-repeat;
+.sidebar .titlebar {
+	.headline {
+		text-transform: uppercase;
+		position: relative;
 
-		&:not(.hidden) + .headline {
-			margin-left: 56px;
+		.title {
+			height: 96px;
+			padding: 54px 15px 0 70px;
+			font: $semibold 3.8rem/1 'Relish Pro';
+			box-sizing: border-box;
+		}
+
+		.subtitle {
+			height: 42px;
+			font: $condensed 2.2rem/2.2 'Relish Pro';
+			color: $light-text-color;
+			letter-spacing: 0.05rem;
+			white-space: nowrap;
+		}
+
+		&::before,
+		&::after {
+			content: '';
+			position: absolute;
+			width: 56px;
+			height: 96px;
+			background-image: url("/images/icons_map.svg");
+			background-repeat: no-repeat;
+		}
+
+		&::after {
+			clip-path: polygon(0 0, 0 10px, 28px 26px, 56px 10px, 56px 0);
+			transition: clip-path $fast;
 		}
 	}
-	.back.hidden {
-		display: none;
-	}
+}
 
+.sidebar .content {
+/*
 	.headline {
 		margin-bottom: 28px;
 		text-transform: uppercase;
@@ -74,40 +102,75 @@
 			clip-path: polygon(0 0, 0 20px, 21px 36px, 42px 20px, 42px 0);
 		}
 	}
-
+*/
 	p {
 		margin-bottom: 24px;
 	}
 
 	.regions {
 		.region {
-			margin-bottom: 10px;
+			height: 50px;
+			padding-left: 60px;
+			position: relative;
+			white-space: nowrap;
 
 			.title {
-				font: $semibold 2.6rem 'Relish Pro';
+				font: $semibold 2.6rem/2.2 'Relish Pro';
 				text-transform: uppercase;
 			}
-			// .subtitle {
-			// 	font: $condensed 1.8rem 'Proxima Nova';
-			// 	color: $light-text-color;
-			// }
+			/*
+			.subtitle {
+				font: $condensed 1.8rem 'Proxima Nova';
+				color: $light-text-color;
+			}
+			*/
+
+			transition: max-height $fast, margin $fast;
+
+			&::before,
+			&::after {
+				content: '';
+				position: absolute;
+				border-radius: 50%;
+				z-index: 1;
+			}
+
+			&::before {
+				top: 8px;
+				left: 10px;
+				width: 36px;
+				height: 36px;
+				opacity: .5;
+			}
+
+			&::after {
+				top: 16px;
+				left: 18px;
+				width: 20px;
+				height: 20px;
+				transition: transform $fast;
+			}
+
+			&:active::after {
+				transform: scale(.67);
+			}
 		}
-	}
-	.regions.hidden {
-		display: none;
+
+		$colors: $accent-color-violet, $accent-color-red, $accent-color-yellow;
+		@for $i from 0 through 11 {
+			li:nth-child(#{$i + 1}) .region::before, li:nth-child(#{$i + 1}) .region::after, {
+				background-color: nth($colors, floor($i / 4) + 1);
+			}
+		}
 	}
 
 	.maps {
-		margin-bottom: 24px;
-		padding: 0 0 20px 0;
-		column-count: 2;
-		box-shadow: 0 1px $shadow-color;
-
 		.map {
-			height: 42px;
-			margin-bottom: 8px;
+			width: auto;
+			height: 56px;
+			margin: 4px 0;
 			padding-left: 56px;
-			font: $semibold 2.6rem/1.85 'Relish Pro';
+			font: $semibold 2.6rem/2.5 'Relish Pro';
 			text-transform: uppercase;
 			position: relative;
 
@@ -115,43 +178,40 @@
 			&::after {
 				content: '';
 				position: absolute;
-				top: 0;
-				left: 0;
-				width: 42px;
-				height: 42px;
-
-				border-radius: 2px;
-				transition: transform $fast;
+				width: 56px;
+				height: 96px;
 			}
 
 			&::before {
-				opacity: .5;
-			}
-		}
-
-		.map.selected {
-			background-color: pink;
-		}
-
-		.map:active {
-			&::after {
-				transform: scale(.67);
-			}
-		}
-/*
-		.map.inactive {
-			color: rgba($regular-text-color, .1);
-
-			&::before,
-			&::after {
-				background: none;
+				left: 0;
+				bottom: 0;
+				background-image: url("/images/icons_map.svg");
+				background-repeat: no-repeat;
+				clip-path: polygon(0 21.33px, 0 96px, 56px 96px, 56px 21.33px);
+				transform: scale(.75);
+				transform-origin: bottom left;
 			}
 
 			&::after {
-				box-shadow: inset 0 0 0 1px $shadow-color;
+				content: '';
+				position: absolute;
+				left: -26px;
+				clip-path: polygon(26px 0, 26px 28px, 26px 56px, 26px 56px, 26px 0);
+				transition: clip-path $fast;
+			}
+
+			&.selected {
+				color: $inverse-text-color;
+
+				&::before {
+					background-color: rgba(white, .25);
+				}
+
+				&::after {
+					clip-path: polygon(16px 0, 0 28px, 16px 56px, 26px 56px, 26px 0);
+				}
 			}
 		}
-*/
 	}
 
 	.pois {
@@ -216,7 +276,29 @@
 			overflow: hidden;
 		}
 	}
-	.pois.hidden {
-		display: none;
+
+	.thumbnails {
+		display: flex;
+		flex-wrap: wrap;
+		margin: -6px;
+		margin-bottom: 36px;
+
+		& > * {
+			width: 150px;
+			height: 100px;
+			margin: 6px;
+		}
+
+		a {
+			width: 100%;
+			height: 100%;
+			background-size: cover;
+			transition: transform $fast;
+
+			&:active {
+				transform: scale(.94);
+				transform-origin: center;
+			}
+		}
 	}
 }

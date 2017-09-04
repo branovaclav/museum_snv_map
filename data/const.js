@@ -1,5 +1,17 @@
 module.exports = {
 	maps: {
+		all: {
+			title: { sk: 'Východzia mapa', en: 'Default Map' },
+			type: { sk: 'Fyzicko-geografická mapa', en: 'Physical-Topographical Map' }
+		},
+		geology: {
+			title: { sk: 'Zem', en: 'Earth' },
+			type: { sk: 'Geologická mapa', en: 'Geological Map' }
+		},
+		waters: {
+			title: { sk: 'Vodstvo', en: 'Waters' },
+			type: { sk: 'Vodstvo a minerálne pramene', en: 'Water and Mineral Springs' }
+		},
 		fauna: {
 			title: { sk: 'Fauna', en: 'Fauna' },
 			type: { sk: 'Fyzicko-geografická mapa', en: 'Physical-Topographical Map' }
@@ -11,35 +23,9 @@ module.exports = {
 		reserves: {
 			title: { sk: 'Chránené územia', en: 'Natural Reserves' },
 			type: { sk: 'Mapa chránených území a biotopov', en: 'Map of Natural Reserves and Habitats' }
-		},
-		waters: {
-			title: { sk: 'Vodstvo', en: 'Waters' },
-			type: { sk: 'Vodstvo a minerálne pramene', en: 'Water and Mineral Springs' }
-		},
-		geology: {
-			title: { sk: 'Zem', en: 'Geology' },
-			type: { sk: 'Geologická mapa', en: 'Geological Map' }
 		}
 	},
-/*
-	groups: {
-		fauna: {
-			title: { sk: 'Fauna', en: 'Fauna' },
-		},
-		flora: {
-			title: { sk: 'Flora', en: 'Flora' },
-		},
-		reserves: {
-			title: { sk: 'Chr. územia', en: 'Nat. Reserves' },
-		},
-		waters: {
-			title: { sk: 'Vodstvo', en: 'Waters' },
-		},
-		geology: {
-			title: { sk: 'Zem', en: 'Earth' },
-		}
-	},
-*/
+
 	regions: {
 		pieniny: {
 			title: { sk: 'Pieniny', en: 'Pieniny' }

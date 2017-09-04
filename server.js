@@ -15,12 +15,12 @@ const imgpath = path.join(root, 'data', 'images');
 
 let lang = 'sk';
 let data = {};
-
+/*
 let abcsort = (a, b) => {
 	a = a.title[lang]; b = b.title[lang];
 	return a < b ? -1 : (a > b ? 1 : 0);
 };
-
+*/
 const db = new loki('data/db.js', {
 	autoload: true,
 	autoloadCallback: () => {
@@ -32,13 +32,18 @@ const db = new loki('data/db.js', {
 			};
 		});
 
-		data.pois.sorted = data.pois.collection.chain().sort(abcsort).data();
+		// data.pois.sorted = data.pois.collection.chain().sort(abcsort).data();
 		data.pois.all.forEach(poi => {
 			try { poi.files = fs.readdirSync(path.join(imgpath, poi.folder)).filter(file => fs.lstatSync(path.join(imgpath, poi.folder, file)).isFile()).map(file => path.join(poi.folder, file)); }
 			catch (err) { poi.files = []; }
 		});
 	}
 });
+
+for (let region in constants.regions) {
+	try { constants.regions[region].files = fs.readdirSync(path.join(imgpath, region)).filter(file => fs.lstatSync(path.join(imgpath, region, file)).isFile()).map(file => path.join(region, file)); }
+	catch (err) { constants.regions[region].files = []; }
+}
 
 app.use('/data', express.static( path.join(root, 'data') ));
 app.use(express.static( path.join(root, 'src') ));
@@ -49,7 +54,7 @@ app.set('views', path.join(root, 'src', 'views'));
 
 //app
 app.get('/data.js', (req, res) => {
-	res.render('data.ejs', { pois: data.pois.sorted, articles: data.articles.all, maps: constants.maps, regions: constants.regions, /*locale: locales[lang],*/ lang });
+	res.render('data.ejs', { pois: data.pois.all, articles: data.articles.all, maps: constants.maps, regions: constants.regions, /*locale: locales[lang],*/ lang });
 });
 /*
 app.get('/lang/:lang', (req, res) => {

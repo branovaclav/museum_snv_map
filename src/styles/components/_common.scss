@@ -42,23 +42,27 @@ $colors: (
 	flora: $accent-color-yellow,
 	reserves: $accent-color-green,
 	waters: $accent-color-blue,
-	geology: $accent-color-brown
+	geology: $accent-color-brown,
+	all: $accent-color-red
 );
 
 @each $key, $value in $colors {
-	[data-map="#{ $key }"],
-	[data-group="#{ $key }"] {
+	[data-map="#{ $key }"] {
+		&.selected {
+			background: linear-gradient(to right, $value 33%, rgba($value, .5));
+		}
+
+		&::before, &::after {
+			background-color: $value;
+			background-position: -#{ (index($colors, ($key $value)) - 1) * 100 }px 0;
+		}
+
 		.colored {
 			background-color: $value;
 
 			&.fill { fill: $value; }
 			&.stroke { stroke: $value; }
 		};
-
-		&::before, &::after {
-			background-color: $value;
-			background-position: -#{ (index($colors, ($key $value)) - 1) * 100 }px 0;
-		}
 	}
 }
 

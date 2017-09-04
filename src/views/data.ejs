@@ -7,15 +7,16 @@ let data = {
 				description: <%- JSON.stringify(poi.description) %>,
 				map:  '<%- poi.map %>',
 				region: '<%- poi.region %>',
+				label: '<%- poi.label %>',
 				files: [<%- poi.files.map(file => `'${ file }'`).join(', ') %>]
 			},
 		<% } %>
 	},
 
 	articles: {
-		<% for (let region of ['global'].concat(Object.keys(regions))) { %>
+		<% for (let region of ['all'].concat(Object.keys(regions))) { %>
 			<%= region %>: {
-				<% for (let map of ['global'].concat(Object.keys(maps))) { %>
+				<% for (let map of ['all'].concat(Object.keys(maps))) { %>
 					<%= map %>: {
 						<% let article = articles.find(article => article.map == map && article.region == region) %>
 						title: <%- article ? JSON.stringify(article.title) : "{ sk: '', en: '' }" %>,

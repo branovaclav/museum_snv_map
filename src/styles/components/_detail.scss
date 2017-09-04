@@ -6,6 +6,7 @@
 
 	background-color: $panel-bkg-color;
 	// backdrop-filter: blur(10px); FIXME
+	z-index: 10;
 
 	box-shadow: 0 0 0 1px $shadow-color;
 	transition: transform $medium, width $medium;
@@ -39,35 +40,49 @@
 .detail .titlebar {
 	.headline {
 		height: 56px;
-		padding-left: 68px;
 		text-transform: uppercase;
 		position: relative;
-
 		font: $semibold 3.6rem/1.8 'Relish Pro';
 
-		&::before,
-		&::after {
-			content: '';
-			position: absolute;
-			border-radius: 50%;
+		&.poi {
+			padding-left: 68px;
+
+			&::before,
+			&::after {
+				content: '';
+				position: absolute;
+				border-radius: 50%;
+			}
+
+			&::before {
+				top: 0;
+				left: 0;
+				width: 56px;
+				height: 56px;
+				transition: transform $fast;
+				border: solid 8px rgba(white, .5);
+				box-sizing: border-box;
+			}
+
+			&::after {
+				top: 16px;
+				left: 16px;
+				width: 24px;
+				height: 24px;
+				background-color: $panel-bkg-color;
+			}
 		}
 
-		&::before {
-			top: 0;
-			left: 0;
-			width: 56px;
-			height: 56px;
-			transition: transform $fast;
-			border: solid 8px rgba(white, .5);
-			box-sizing: border-box;
-		}
-
-		&::after {
-			top: 16px;
-			left: 16px;
-			width: 24px;
-			height: 24px;
-			background-color: $panel-bkg-color;
+		&.region {
+			&::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: -65px;
+				width: 42px;
+				height: 56px;
+				clip-path: polygon(0 0, 0 56px, 27px 56px, 42px 28px, 27px 0);
+			}
 		}
 	}
 }

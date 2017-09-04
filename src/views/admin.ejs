@@ -53,8 +53,15 @@
 					</div>
 					<div class="labels">
 						<label>Pozícia na mape</label>
+						<label>Popiska</label>
 						<label>Priečinok s fotkami</label>
 						<input type="text" name="position">
+						<select name="label">
+							<option value="0">Pod bodom</option>
+							<option value="1">Nad bodom</option>
+							<option value="2">Naľavo</option>
+							<option value="3">Napravo</option>
+						</select>
 						<input type="text" name="folder">
 					</div>
 					<div>
@@ -107,14 +114,13 @@
 		</div>
 		<div id="articles" class="panel">
 			<div class="bar regions">
-				<a class="button" data-region="global">Všetky oblasti</a>
+				<a class="button" data-region="all">Všetky oblasti</a>
 				<% for (let region in regions) { %>
 					<a class="button" data-region="<%= region %>"><%= regions[region].title.sk %></a>
 				<% } %>
 			</div>
 
 			<div class="bar maps">
-				<a class="button alt" data-map="global">Všetky mapy</a>
 				<% for (let map in maps) { %>
 					<a class="button alt" data-map="<%= map %>"><%= maps[map].title.sk %></a>
 				<% } %>

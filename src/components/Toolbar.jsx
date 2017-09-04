@@ -3,6 +3,10 @@ import React from 'react';
 const Actions = props => (
 	<ul className="actions">
 		<li><a className="icon home" onClick={ props.onHomeClick }></a></li>
+		{/*
+		<li><a className="icon labels" onClick={ props.onLabelsClick }></a></li>
+		<li><a className="icon legend" onClick={ props.onLegendClick }></a></li>
+		*/}
 	</ul>
 )
 

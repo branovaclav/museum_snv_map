@@ -8,16 +8,20 @@ const Detail = props => (
 )
 
 const PoiHeadline = props => (
-	<h1 className="headline" data-map={ props.map }>{ props.title[ props.lang ] }</h1>
+	<h1 className="headline poi" data-map={ props.map }>{ props.title[ props.lang ] }</h1>
 )
 
 const PoiDescription = props => (
 	<p className="description">{ props.text[ props.lang ] }</p>
 )
 
+const RegionHeadline = props => (
+	<h1 className="headline region" data-map={ props.map || 'flora' }>{ props.title[ props.lang ] }</h1>
+)
+
 const Actions = props => {
-	const prevPoi = props.pois[ props.pois.indexOf(props.poi) - 1 ]
-	const nextPoi = props.pois[ props.pois.indexOf(props.poi) + 1 ]
+	const prevPoi = props.poi && props.pois[ props.pois.indexOf(props.poi) - 1 ]
+	const nextPoi = props.poi && props.pois[ props.pois.indexOf(props.poi) + 1 ]
 
 	return (
 		<ul className="actions">
@@ -64,6 +68,7 @@ export {
 	Detail,
 	PoiHeadline,
 	PoiDescription,
+	RegionHeadline,
 	Actions,
 	Gallery
 }

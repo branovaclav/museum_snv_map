@@ -7,9 +7,9 @@ import * as regions from './regions'
 
 import $ from 'jquery'
 
-const Image = props => (
+const Image = ({ map, region, anim }) => (
 	<g className="map">
-		{ maps[ props.map || 'fauna' ]() }
+		{ maps[ map || 'all' ]({ region, anim }) }
 	</g>
 )
 
@@ -50,6 +50,21 @@ const Pois = props => (
 	</Transition>
 )
 
+const Labels = props => (
+	<Transition component="ul" className="labels" transitionName={ props.anim.name } transitionEnterTimeout={ props.anim.enter } transitionLeaveTimeout={ props.anim.leave }>
+		{ Object.keys(props.pois).map(poi => {
+			const point = props.pois[ poi ]
+			const transform = `translate(${ point.position.left }px, ${ point.position.top }px) scale(${ 1 / props.scale })`
+			const location = ['bottom', 'top', 'left', 'right'][ point.label || 0 ]
+			return (
+				<li key={ poi } className={ `label ${ location } ${ poi == props.poi ? 'selected' : '' }` } style={{ transform }}>
+					<span>{ point.title[ props.lang ] }</span>
+				</li>
+			)
+		})}
+	</Transition>
+)
+
 class Map extends React.Component {
 	componentDidMount() {
 		this.props.onRender(this.refs.map)
@@ -68,13 +83,14 @@ class Map extends React.Component {
 
 		return (
 			<section id="map" ref="map" className="map" style={{ transform, transformOrigin }}>
+				{ this.props.children.slice(-1) }
 				<svg>
 					<defs>
 						<clipPath id="svg-clip">
 							<path d="M0,34 C-18.778,34 -34,18.778 -34,0 C-34,-18.778 -18.778,-34 0,-34 C18.778,-34 34,-18.778 34,0 C34,18.778 18.778,34 0,34 Z M0,18 C9.941,18 18,9.941 18,0 C18,-9.941 9.941,-18 0,-18 C-9.941,-18 -18,-9.941 -18,0 C-18,9.941 -9.941,18 0,18 Z"></path>
 						</clipPath>
 					</defs>
-					{ this.props.children }
+					{ this.props.children.slice(0, this.props.children.length - 1) }
 				</svg>
 			</section>
 		)
@@ -85,5 +101,6 @@ export {
 	Map,
 	Image,
 	Regions,
-	Pois
+	Pois,
+	Labels
 }

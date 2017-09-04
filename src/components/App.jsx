@@ -2,9 +2,9 @@ import React from 'react';
 import Transition from 'react-addons-css-transition-group';
 
 import { Titlebar, Content } from './Common'
-import { Map, Image, Regions, Pois } from './Map'
-import { Sidebar, ArticleHeadline, ArticleDescription, RegionList, MapList } from './Sidebar'
-import { Detail, PoiHeadline, PoiDescription, Actions, Gallery } from './Detail'
+import { Map, Image, Regions, Pois, Labels } from './Map'
+import { Sidebar, ArticleHeadline, ArticleDescription, RegionList, MapList, Thumbnails } from './Sidebar'
+import { Detail, PoiHeadline, PoiDescription, RegionHeadline, Actions, Gallery } from './Detail'
 import Toolbar from './Toolbar'
 
 const paths = {
@@ -28,7 +28,7 @@ export default class App extends React.Component {
 	}
 
 	calculateView(elem, region) {
-		const viewportPadding = 50
+		const viewportPadding = 40
 		const viewport = {
 			left: viewportPadding,
 			top: viewportPadding,
@@ -54,7 +54,7 @@ export default class App extends React.Component {
 			}
 		}
 		else { //map
-			this.views.global = {
+			this.views.all = {
 				scale: null,
 				origin: null,
 				scroll: {
@@ -69,14 +69,14 @@ export default class App extends React.Component {
 		this.pois = {}
 		Object.keys(data.pois).forEach(poi => {
 			const point = data.pois[ poi ]
-			// if (point.region == this.state.region && point.map == this.state.map)
+			if (point.region == this.state.region && point.map == this.state.map)
 				this.pois[ poi ] = point
 		});
 		this.setPoi(null)
 	}
 
 	setRegion(region) {
-		const view = this.views[region || 'global']
+		const view = this.views[region || 'all']
 		this.setState({ region, view }, this.updatePois)
 	}
 
@@ -90,7 +90,9 @@ export default class App extends React.Component {
 			this.setImage(this.pois[ poi ].files[ 0 ])
 	}
 
-	setImage(image) {
+	setImage(image, reset) {
+		if (reset)
+			this.setPoi(null)
 		this.setState({ image })
 	}
 
@@ -104,51 +106,59 @@ export default class App extends React.Component {
 	}
 
     render() {
-		const defaultMapType = { sk: 'FIXME', en: 'FIXME' }
-		let { region, map, poi, image, view, lang } = this.state
-
-		let article = data.articles[ region || 'global' ][ map || 'global' ]
-		if (article.title[lang].length == 0 && article.description.length == 0)
-			article = data.articles[ region ].global;
-
 		const anim = {
 			name: { enter: 'hidden', leave: 'hidden' },
 			enter: .005 * 1000, leave: .33 * 1000
 		}
 
+		let { region, map, poi, image, view, lang } = this.state
+
+		let article = data.articles[ region || 'all' ][ map || 'all' ]
+		if (article.title[lang].length == 0 && article.description.length == 0)
+			article = data.articles[ region ].all;
+
         return (
 			<div id="app">
 				<Map view={ view } onRender={ this.calculateView.bind(this) }>
-					<Image region={ region } map={ map } />
+					<Image region={ region } map={ map } anim={ anim } />
 					<Regions onRender={ this.calculateView.bind(this) } onClick={ region => this.setRegion(region) } />
 					<Pois pois={ this.pois } poi={ poi } scale={ view.scale ? view.scale : 1 } onClick={ poi => this.setPoi(poi) } anim={ anim } />
+					<Labels pois={ this.pois } poi={ poi } scale={ view.scale ? view.scale : 1 } lang={ lang } anim={ anim } />
 				</Map>
 
 				<Transition transitionName={ anim.name } transitionEnterTimeout={ anim.enter } transitionLeaveTimeout={ anim.leave }>
 					{ !image &&
 						<Sidebar key="sidebar">
 							<Titlebar>
-								<ArticleHeadline title={ article.title } subtitle={ data.maps[ map ] ? data.maps[ map ].type : defaultMapType } lang={ lang } />
+								<ArticleHeadline title={ article.title } subtitle={ data.maps[ map || 'all' ].type } map={ map } lang={ lang } />
 							</Titlebar>
 							<Content>
 								<ArticleDescription text={ article.description } lang={ lang } />
 								{ region ?
-									<MapList maps={ data.maps } map={ map } onClick={ map => this.setMap(map) } lang={ lang } /> :
+									<div>
+										<Thumbnails images={ data.regions[ region ].files.slice(0, 6) } paths={ paths } onClick={ this.setImage.bind(this) } />
+										<MapList maps={ data.maps } map={ map } onClick={ map => this.setMap(map) } lang={ lang } />
+									</div> :
 									<RegionList regions={ data.regions } onClick={ region => this.setRegion(region) } lang={ lang } />
 								}
 							</Content>
 							<Toolbar onHomeClick={ this.handleHomeClick.bind(this) } onLangClick={ lang => this.setState({ lang }) } lang={ lang } />
 						</Sidebar>
 					}
-					{ poi &&
+					{ (poi || (region && image)) &&
 						<Detail key="detail" maximized={ image ? true : false }>
 							<Titlebar>
-								<PoiHeadline title={ data.pois[ poi ].title } map={ data.pois[ poi ].map } lang={ lang } />
+								{ poi ?
+									<PoiHeadline title={ data.pois[ poi ].title } map={ data.pois[ poi ].map } lang={ lang } /> :
+									<RegionHeadline title={ data.regions[ region ].title } map={ map } lang={ lang } />
+								}
 								<Actions pois={ Object.keys(this.pois) } poi={ poi } onNextClick={ this.setPoi.bind(this) } onCloseClick={ () => image ? this.setImage(null) : this.setPoi(null) } />
 							</Titlebar>
 							<Content>
-								<PoiDescription text={ data.pois[ poi ].description } lang={ lang } />
-								<Gallery images={ data.pois[ poi ].files } image={ image } paths={ paths } onClick={ this.setImage.bind(this) } anim={ anim } />
+								{ poi &&
+									<PoiDescription text={ data.pois[ poi ].description } lang={ lang } />
+								}
+								<Gallery images={ poi ? data.pois[ poi ].files : data.regions[ region ].files } image={ image } paths={ paths } onClick={ this.setImage.bind(this) } anim={ anim } />
 							</Content>
 						</Detail>
 					}

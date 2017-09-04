@@ -152,7 +152,12 @@ label {
 
 	.form {
 		.labels label,
-		[name="map"], [name="region"], [name="folder"], [name="position"] {
+		[name="folder"], [name="position"], [name="label"] {
+			display: inline-block;
+			width: calc(33.33% - 4px);
+		}
+
+		[name="map"], [name="region"] {
 			display: inline-block;
 			width: calc(50% - 4px);
 		}

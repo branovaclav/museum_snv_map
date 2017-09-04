@@ -62,12 +62,13 @@ let Collection = class {
 			map: fields.map.value,
 			region: fields.region.value,
 		};
-		if (fields.position && fields.folder)
+		if (fields.position && fields.label && fields.folder)
 			Object.assign(result, {
 				position: {
 					left: fields.position.value.split(',')[0],
 					top: fields.position.value.split(',')[1]
 				},
+				label: fields.label.value,
 				folder: fields.folder.value
 			});
 
@@ -126,7 +127,7 @@ let Pois = class extends Collection {
 
 		let poi = data.pois.find(poi => poi.$loki == id);
 		fields.id.value = poi ? poi.$loki : '';
-		['map', 'region', 'folder'].forEach(field => fields[field].value = poi ? poi[field] : '');
+		['map', 'region', 'label', 'folder'].forEach(field => fields[field].value = poi ? poi[field] : '');
 		['title_sk', 'title_en', 'description_sk', 'description_en'].forEach(field => fields[field].value = poi ? poi[field.split('_')[0]][field.split('_')[1]] : '');
 		fields.position.value = poi ? `${ poi.position.left },${ poi.position.top }` : '';
 	}
