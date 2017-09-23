@@ -1,6 +1,8 @@
 import React from 'react'
 import Transition from 'react-addons-css-transition-group';
 
+import $ from 'jquery'
+
 const Detail = props => (
 	<section className={ `detail ${ props.maximized ? 'maximized' : '' }` }>
 		{ props.children }
@@ -32,36 +34,49 @@ const Actions = props => {
 	)
 }
 
-const Gallery = props => {
-	const prevImage = props.images[ props.images.indexOf(props.image) - 1 ]
-	const nextImage = props.images[ props.images.indexOf(props.image) + 1 ]
 
-	return (
-		<div>
-			<div className="photo">
-				<ul className="actions">
-					<li><a className={ `back ${ prevImage ? '' : 'disabled' }` } onClick={ () => prevImage && props.onClick(prevImage) }><span className="icon back"></span></a></li>
-					<li><a className={ `forward ${ nextImage ? '' : 'disabled' }` } onClick={ () => nextImage && props.onClick(nextImage) }><span className="icon forward"></span></a></li>
-				</ul>
-				<Transition component="ul" className="images" transitionName={ props.anim.name } transitionEnterTimeout={ props.anim.enter } transitionLeaveTimeout={ props.anim.leave }>
-					{ props.image &&
-						<li key={ props.image }>
-							<img src={ `${ props.paths.images }/${ props.image }` } />
+class Gallery extends React.Component {
+	componentDidUpdate(prevProps) {
+		const thumbnails = this.refs.thumbnails
+		const thumbnail = thumbnails.querySelector(`[src*="${ this.props.image }"]`).parentNode.parentNode;
+
+		if (thumbnails.scrollLeft > thumbnail.offsetLeft)
+			$(thumbnails).animate({ scrollLeft: thumbnail.offsetLeft }, .33 * 1000);
+		if (thumbnails.scrollLeft + thumbnails.offsetWidth - thumbnail.offsetWidth < thumbnail.offsetLeft)
+			$(thumbnails).animate({ scrollLeft: thumbnail.offsetLeft - (thumbnails.offsetWidth - thumbnail.offsetWidth) }, .33 * 1000);
+	}
+
+	render () {
+		const prevImage = this.props.images[ this.props.images.indexOf(this.props.image) - 1 ]
+		const nextImage = this.props.images[ this.props.images.indexOf(this.props.image) + 1 ]
+
+		return (
+			<div>
+				<div className="photo">
+					<ul className="actions">
+						<li><a className={ `back ${ prevImage ? '' : 'disabled' }` } onClick={ () => prevImage && this.props.onClick(prevImage) }><span className="icon back"></span></a></li>
+						<li><a className={ `forward ${ nextImage ? '' : 'disabled' }` } onClick={ () => nextImage && this.props.onClick(nextImage) }><span className="icon forward"></span></a></li>
+					</ul>
+					<Transition component="ul" className="images" transitionName={ this.props.anim.name } transitionEnterTimeout={ this.props.anim.enter } transitionLeaveTimeout={ this.props.anim.leave }>
+						{ this.props.image &&
+							<li key={ this.props.image }>
+								<img src={ `${ this.props.paths.images }/${ this.props.image }` } />
+							</li>
+						}
+					</Transition>
+				</div>
+				<ul ref="thumbnails" className="thumbnails">
+					{ this.props.images.map(image => (
+						<li key={ image }>
+							<a className={ image == this.props.image && 'selected' } onClick={ () => this.props.onClick(image) }>
+								<img src={ `${ this.props.paths.thumbnails }/${ image }` } />
+							</a>
 						</li>
-					}
-				</Transition>
+					))}
+				</ul>
 			</div>
-			<ul className="thumbnails">
-				{ props.images.map(image => (
-					<li key={ image }>
-						<a className={ image == props.image && 'selected' } onClick={ () => props.onClick(image) }>
-							<img src={ `${ props.paths.thumbnails }/${ image }` } />
-						</a>
-					</li>
-				))}
-			</ul>
-		</div>
-	)
+		)
+	}
 }
 
 export {
