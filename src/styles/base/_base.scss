@@ -21,11 +21,11 @@ $base-line-height: 1.3;
 /* --- Colors --- */
 
 /* backgrounds */
-$page-bkg-color: rgb(250, 250, 250);
+$page-bkg-color: rgb(246, 246, 246);
 $panel-bkg-color: rgb(255, 255, 255);
 
 /* components */
-$shadow-color: rgba(0, 0, 0, .1);
+$shadow-color: rgba(0, 0, 0, .2);
 
 /* text */
 $regular-text-color: rgb(0, 0, 0);
@@ -44,7 +44,7 @@ $accent-color-violet: rgb(151, 102, 123);
 /* --- Base --- */
 html {
 	font-size: 62.5%; /* maps '1rem' to '10px' */
-	background: $page-bkg-color url(/images/bkg.png);
+	background: $page-bkg-color url(/images/bkg.gif);
 	width: 400%; //canvas
 	height: 400%;
 	position: relative;

@@ -17,13 +17,13 @@ const ArticleDescription = props => (
 	<p>{ props.text[ props.lang ] }</p>
 )
 
-const RegionList = props => (
+const RegionList = ({ regions, onClick, lang }) => (
 	<ul className="regions">
-		{ Object.keys(props.regions).map(region => (
+		{ Object.keys(regions).slice(1).map(region => (
 			<li key={ region }>
-				<a className="region" onClick={ () => props.onClick(region) }>
+				<a className="region" onClick={ () => onClick(region) }>
 					<h2>
-						<div className="title">{ props.regions[ region ].title[ props.lang ] }</div>
+						<div className="title">{ regions[ region ].title[ lang ] }</div>
 						{/* <div className="subtitle">{ props.regions[ region ].subtitle[ props.lang ] }</div> */}
 					</h2>
 				</a>

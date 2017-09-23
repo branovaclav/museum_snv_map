@@ -27,41 +27,57 @@ module.exports = {
 	},
 
 	regions: {
+		all: {
+			title: { sk: 'Všetky oblasti', en: 'All Regions' },
+			position: { top: 0, left: 0, width: 934, height: 1000 }
+		},
 		pieniny: {
-			title: { sk: 'Pieniny', en: 'Pieniny' }
+			title: { sk: 'Pieniny', en: 'Pieniny' },
+			position: { top: 1, left: 1, width: 100, height: 100 }
 		},
 		spisska_magura: {
-			title: { sk: 'Spišská Magura', en: 'Spišská Magura' }
+			title: { sk: 'Spišská Magura', en: 'Spišská Magura' },
+			position: { top: 0, left: 105, width: 535, height: 298 }
 		},
 		tatry: {
-			title: { sk: 'Vysoké Tatry', en: 'High Tatras' }
+			title: { sk: 'Vysoké Tatry', en: 'High Tatras' },
+			position: { top: 1, left: 1, width: 100, height: 100 }
 		},
 		nizke_tatry: {
-			title: { sk: 'Nízke Tatry', en: 'Low Tatras' }
+			title: { sk: 'Nízke Tatry', en: 'Low Tatras' },
+			position: { top: 1, left: 1, width: 100, height: 100 }
 		},
 		podtatranska_kotlina: {
-			title: { sk: 'Podtatranská kotlina', en: 'Under-Tatra Basin' }
+			title: { sk: 'Podtatranská kotlina', en: 'Under-Tatra Basin' },
+			position: { top: 1, left: 1, width: 100, height: 100 }
 		},
 		hornadska_kotlina: {
-			title: { sk: 'Hornádska kotlina', en: 'Hornád Basin' }
+			title: { sk: 'Hornádska kotlina', en: 'Hornád Basin' },
+			position: { top: 1, left: 1, width: 100, height: 100 }
 		},
 		levocske_vrchy: {
-			title: { sk: 'Levočské vrchy', en: 'Levoča Mountains' }
+			title: { sk: 'Levočské vrchy', en: 'Levoča Mountains' },
+			position: { top: 1, left: 1, width: 100, height: 100 }
 		},
 		kozie_chrbty: {
-			title: { sk: 'Kozie chrbty', en: 'Kozie Chrbty' }
+			title: { sk: 'Kozie chrbty', en: 'Kozie Chrbty' },
+			position: { top: 1, left: 1, width: 100, height: 100 }
 		},
 		slovensky_raj: {
-			title: { sk: 'Slovenský raj', en: 'Slovak Paradise' }
+			title: { sk: 'Slovenský raj', en: 'Slovak Paradise' },
+			position: { top: 1, left: 1, width: 100, height: 100 }
 		},
 		volovske_vrchy: {
-			title: { sk: 'Volovské vrchy', en: 'Volovec Mountains' }
+			title: { sk: 'Volovské vrchy', en: 'Volovec Mountains' },
+			position: { top: 1, left: 1, width: 100, height: 100 }
 		},
 		cierna_hora: {
-			title: { sk: 'Čierna hora', en: 'Black Mountain' }
+			title: { sk: 'Čierna hora', en: 'Black Mountain' },
+			position: { top: 1, left: 1, width: 100, height: 100 }
 		},
 		branisko: {
-			title: { sk: 'Branisko', en: 'Branisko' }
+			title: { sk: 'Branisko', en: 'Branisko' },
+			position: { top: 1, left: 1, width: 100, height: 100 }
 		}
 	}
 };

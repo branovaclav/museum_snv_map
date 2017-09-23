@@ -133,8 +133,39 @@ let Pois = class extends Collection {
 	}
 }
 
+let Picker = class {
+	constructor () {
+		this.el = {
+			region: $('#pois .form [name=region]'),
+			map: $('#pois .form [name=map]'),
+			position: $('#pois .form [name=position]'),
+			picker: $('#pois .form .picker'),
+		};
+
+		this.el.position.on('focus blur', event => this.toggle(event.type == 'focus'))
+		this.el.picker.on('mousedown', event => this.point({ top: event.originalEvent.pageY, left: event.originalEvent.pageX }))
+	}
+
+	toggle (show) {
+		if (show && this.el.region.val() && this.el.map.val())
+			this.el.picker.html(`<img src="/images/maps/${ this.el.map.val() }/${ this.el.region.val() }@1x.png" />`).show()
+		else
+			this.el.picker.hide()
+	}
+
+	point ({ top, left }) {
+		const region = this.el.region.find(':selected').data()
+		const position = {
+			left: region.left + region.width * (left - this.el.picker.offset().left) / this.el.picker.width(),
+			top: region.top + region.height * (top - this.el.picker.offset().top) / this.el.picker.height()
+		}
+		this.el.position.val(`${ Math.round(position.left) },${ Math.round(position.top) }`)
+	}
+};
+
 $(window).on('load', () => {
 	new Tabs();
 	new Articles();
 	new Pois();
+	new Picker();
 });

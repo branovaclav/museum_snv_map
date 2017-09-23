@@ -2,16 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom'
 import Transition from 'react-addons-css-transition-group';
 
-import * as maps from './maps'
 import * as regions from './regions'
 
 import $ from 'jquery'
 
-const Image = ({ map, region, anim }) => (
-	<g className="map">
-		{ maps[ map || 'all' ]({ region, anim }) }
-	</g>
-)
+const Image = ({ map, region, anim }) => {
+	let pos = data.regions[ region || 'all' ].position
+
+	return (
+		<g className="map">
+			<Transition component="g" className="image" transitionName={ anim.name } transitionEnterTimeout={ anim.enter } transitionLeaveTimeout={ .5 * 1000 }>
+				<image key={ region || 'all' } xlinkHref={ `/images/maps/${ map || 'all' }/${ region || 'all' }@1x.png` } x={ pos.left } y={ pos.top } width={ pos.width } height={ pos.height } />
+			</Transition>
+		</g>
+	)
+}
 
 class Regions extends React.Component {
 	componentDidMount() {

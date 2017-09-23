@@ -54,7 +54,7 @@ app.set('views', path.join(root, 'src', 'views'));
 
 //app
 app.get('/data.js', (req, res) => {
-	res.render('data.ejs', { pois: data.pois.all, articles: data.articles.all, maps: constants.maps, regions: constants.regions, /*locale: locales[lang],*/ lang });
+	res.render('data.ejs', { pois: data.pois.all, articles: data.articles.all, maps: constants.maps, regions: constants.regions, lang });
 });
 /*
 app.get('/lang/:lang', (req, res) => {

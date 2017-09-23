@@ -33,12 +33,15 @@
 					<div>
 						<label>Región a mapa</label>
 						<select name="region">
-							<% for (let region in regions) { %>
-								<option value="<%= region %>"><%= regions[region].title.sk %></option>
+							<% for (let region of Object.keys(regions).slice(1)) { %>
+								<% let pos = regions[ region ].position %>
+								<option value="<%= region %>" data-top="<%= pos.top %>" data-left="<%= pos.left %>" data-width="<%= pos.width %>" data-height="<%= pos.height %>">
+									<%= regions[ region ].title.sk %>
+								</option>
 							<% } %>
 						</select>
 						<select name="map">
-							<% for (let map in maps) { %>
+							<% for (let map of Object.keys(maps).slice(1)) { %>
 								<option value="<%= map %>"><%= maps[map].title.sk %></option>
 							<% } %>
 						</select>
@@ -54,7 +57,11 @@
 					<div class="labels">
 						<label>Pozícia na mape</label>
 						<label>Popiska</label>
+						<!--
 						<label>Priečinok s fotkami</label>
+						-->
+						<input type="hidden" name="folder">
+
 						<input type="text" name="position">
 						<select name="label">
 							<option value="0">Pod bodom</option>
@@ -62,7 +69,7 @@
 							<option value="2">Naľavo</option>
 							<option value="3">Napravo</option>
 						</select>
-						<input type="text" name="folder">
+						<div class="picker"></div>
 					</div>
 					<div>
 						<label>Nadpis (anglicky)</label>
@@ -114,7 +121,6 @@
 		</div>
 		<div id="articles" class="panel">
 			<div class="bar regions">
-				<a class="button" data-region="all">Všetky oblasti</a>
 				<% for (let region in regions) { %>
 					<a class="button" data-region="<%= region %>"><%= regions[region].title.sk %></a>
 				<% } %>

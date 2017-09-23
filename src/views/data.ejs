@@ -14,9 +14,9 @@ let data = {
 	},
 
 	articles: {
-		<% for (let region of ['all'].concat(Object.keys(regions))) { %>
+		<% for (let region of Object.keys(regions)) { %>
 			<%= region %>: {
-				<% for (let map of ['all'].concat(Object.keys(maps))) { %>
+				<% for (let map of Object.keys(maps)) { %>
 					<%= map %>: {
 						<% let article = articles.find(article => article.map == map && article.region == region) %>
 						title: <%- article ? JSON.stringify(article.title) : "{ sk: '', en: '' }" %>,
