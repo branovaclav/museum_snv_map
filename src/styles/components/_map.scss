@@ -108,7 +108,11 @@
 
 			box-sizing: border-box;
 			transform-origin: center;
-			transition: transform $slow;
+			transition: opacity $medium;
+
+			&.hidden {
+				opacity: 0;
+			}
 
 			span {
 				padding: 4px 6px;
