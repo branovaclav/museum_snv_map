@@ -116,7 +116,7 @@ export default class App extends React.Component {
 			<div id="app">
 				<Map view={ view } onRender={ this.calculateView.bind(this) }>
 					<Image region={ region } map={ map } anim={ anim } />
-					<Regions onRender={ this.calculateView.bind(this) } onClick={ region => this.setRegion(region) } />
+					<Regions region={ region } onRender={ this.calculateView.bind(this) } onClick={ region => this.setRegion(region) } />
 					<Pois pois={ this.pois } poi={ poi } scale={ view.scale ? view.scale : 1 } onClick={ poi => this.setPoi(poi) } anim={ anim } />
 					<Labels pois={ this.pois } poi={ poi } scale={ view.scale ? view.scale : 1 } lang={ lang } anim={ anim } />
 				</Map>

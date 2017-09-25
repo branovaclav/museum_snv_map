@@ -15,28 +15,31 @@
 
 	.regions {
 		fill: rgba(white, 0);
-		stroke: rgba(red, 1);
-		stroke-width: 0.16px;
+		stroke: rgba(white, 0);
+		stroke-width: 1.25px;
 
-		& > * {
-			// animation: blink ($pulse * 2) linear alternate infinite;
-			transition: stroke $fast, fill $fast;
+		&.animated > * {
+			animation: blink 24s linear infinite;
 
-			&:active { fill: rgba(white, .25); stroke: rgba(white, 1); animation: none; }
+			@for $i from 1 through 12 {
+				&:nth-child(#{$i}) {
+			    	animation-delay: -#{$i * 2}s;
+				}
+			}
+		}
+
+		&.hidden {
+			display: none;
 		}
 	}
 
 	@keyframes blink {
-		from { stroke: rgba(white, 0); }
-		to { stroke: rgba(white, 1); }
+		@for $i from 1 through 12 {
+			#{ ($i - 1) * (100 / 12) }% { fill: rgba(white, 0); stroke: rgba(white, 0); }
+			#{ $i * (100 / 12) - (100 / 24) }% { fill: rgba(white, if($i == 1, 0.5, 0)); stroke: rgba(white, 1); }
+		}
 	}
-/*
-	@keyframes blink {
-		0% { fill: rgba(white, 0); stroke: rgba(white, 0); }
-		2.5% { fill: rgba(white, .33); stroke: rgba(white, 1); }
-		5% { fill: rgba(white, 0); stroke: rgba(white, 0); }
-	}
-*/
+
 	.image > * {
 		transition: opacity $slow;
 

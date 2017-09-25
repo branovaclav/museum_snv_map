@@ -27,7 +27,7 @@ class Regions extends React.Component {
 
 	render() {
 		return (
-			<g className="regions">
+			<g className={ `regions ${ this.props.region ? 'hidden' : 'animated' }` }>
 				{ Object.keys(regions).map(region => (
 					React.createElement(regions[ region ], { key: region, ref: region, region: region, onClick: () => this.props.onClick(region) })
 				))}
