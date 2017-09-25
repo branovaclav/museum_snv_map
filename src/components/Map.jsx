@@ -78,7 +78,7 @@ class Map extends React.Component {
 	componentDidUpdate(prevProps) {
 		const view = this.props.view
 		if (view != prevProps.view)
-			$('body').animate({ scrollLeft: view.scroll.left, scrollTop: view.scroll.top }, .5 * 1000); // window.scrollTo(view.scroll.left, view.scroll.top)
+			$('html, body').animate({ scrollLeft: view.scroll.left, scrollTop: view.scroll.top }, .5 * 1000); // window.scrollTo(view.scroll.left, view.scroll.top)
 	}
 
 	render() {

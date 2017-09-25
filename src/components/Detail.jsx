@@ -60,7 +60,7 @@ class Gallery extends React.Component {
 					<Transition component="ul" className="images" transitionName={ this.props.anim.name } transitionEnterTimeout={ this.props.anim.enter } transitionLeaveTimeout={ this.props.anim.leave }>
 						{ this.props.image &&
 							<li key={ this.props.image }>
-								<img src={ `${ this.props.paths.images }/${ this.props.image }` } />
+								<img src={ `${ this.props.paths.images }${ this.props.image }` } />
 							</li>
 						}
 					</Transition>
@@ -68,8 +68,8 @@ class Gallery extends React.Component {
 				<ul ref="thumbnails" className="thumbnails">
 					{ this.props.images.map(image => (
 						<li key={ image }>
-							<a className={ image == this.props.image && 'selected' } onClick={ () => this.props.onClick(image) }>
-								<img src={ `${ this.props.paths.thumbnails }/${ image }` } />
+							<a className={ image == this.props.image ? 'selected' : '' } onClick={ () => this.props.onClick(image) }>
+								<img src={ `${ this.props.paths.thumbnails }${ image }` } />
 							</a>
 						</li>
 					))}

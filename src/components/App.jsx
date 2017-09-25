@@ -7,11 +7,6 @@ import { Sidebar, ArticleHeadline, ArticleDescription, RegionList, MapList, Thum
 import { Detail, PoiHeadline, PoiDescription, RegionHeadline, Actions, Gallery } from './Detail'
 import Toolbar from './Toolbar'
 
-const paths = {
-	images: '/data/images',
-	thumbnails: '/data/images/thumbnails'
-}
-
 export default class App extends React.Component {
 	constructor() {
 		super()
@@ -136,7 +131,7 @@ export default class App extends React.Component {
 								<ArticleDescription text={ article.description } lang={ lang } />
 								{ region ?
 									<div>
-										<Thumbnails images={ data.regions[ region ].files.slice(0, 6) } paths={ paths } onClick={ this.setImage.bind(this) } />
+										<Thumbnails images={ data.regions[ region ].files.slice(0, 6) } paths={ data.paths } onClick={ this.setImage.bind(this) } />
 										<MapList maps={ data.maps } map={ map } onClick={ map => this.setMap(map) } lang={ lang } />
 									</div> :
 									<RegionList regions={ data.regions } onClick={ region => this.setRegion(region) } lang={ lang } />
@@ -158,7 +153,7 @@ export default class App extends React.Component {
 								{ poi &&
 									<PoiDescription text={ data.pois[ poi ].description } lang={ lang } />
 								}
-								<Gallery images={ poi ? data.pois[ poi ].files : data.regions[ region ].files } image={ image } paths={ paths } onClick={ this.setImage.bind(this) } anim={ anim } />
+								<Gallery images={ poi ? data.pois[ poi ].files : data.regions[ region ].files } image={ image } paths={ data.paths } onClick={ this.setImage.bind(this) } anim={ anim } />
 							</Content>
 						</Detail>
 					}

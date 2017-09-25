@@ -11,7 +11,11 @@ const host = process.env.HOST || '127.0.0.1';
 const port = process.env.PORT || 3000;
 
 const root = __dirname;
-const imgpath = path.join(root, 'data', 'images');
+// const imgpath = path.join(root, 'data', 'images');
+const paths = {
+	images: path.join('data', 'images', '/'),
+	thumbnails: path.join('data', 'images', 'thumbnails', '/')
+}
 
 let lang = 'sk';
 let data = {};
@@ -34,14 +38,14 @@ const db = new loki('data/db.js', {
 
 		// data.pois.sorted = data.pois.collection.chain().sort(abcsort).data();
 		data.pois.all.forEach(poi => {
-			try { poi.files = fs.readdirSync(path.join(imgpath, poi.folder)).filter(file => fs.lstatSync(path.join(imgpath, poi.folder, file)).isFile()).map(file => path.join(poi.folder, file)); }
+			try { poi.files = fs.readdirSync(path.join(paths.images, poi.folder)).filter(file => fs.lstatSync(path.join(paths.images, poi.folder, file)).isFile()).map(file => path.join(poi.folder, file)); }
 			catch (err) { poi.files = []; }
 		});
 	}
 });
 
 for (let region in constants.regions) {
-	try { constants.regions[region].files = fs.readdirSync(path.join(imgpath, region)).filter(file => fs.lstatSync(path.join(imgpath, region, file)).isFile()).map(file => path.join(region, file)); }
+	try { constants.regions[region].files = fs.readdirSync(path.join(paths.images, region)).filter(file => fs.lstatSync(path.join(paths.images, region, file)).isFile()).map(file => path.join(region, file)); }
 	catch (err) { constants.regions[region].files = []; }
 }
 
@@ -54,7 +58,7 @@ app.set('views', path.join(root, 'src', 'views'));
 
 //app
 app.get('/data.js', (req, res) => {
-	res.render('data.ejs', { pois: data.pois.all, articles: data.articles.all, maps: constants.maps, regions: constants.regions, lang });
+	res.render('data.ejs', { pois: data.pois.all, articles: data.articles.all, maps: constants.maps, regions: constants.regions, paths, lang });
 });
 /*
 app.get('/lang/:lang', (req, res) => {
