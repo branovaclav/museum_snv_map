@@ -60,12 +60,12 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 225);
+/******/ 	return __webpack_require__(__webpack_require__.s = 226);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 225:
+/***/ 226:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -77,7 +77,11 @@ var _jquery = __webpack_require__(34);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-__webpack_require__(226);
+var _util = __webpack_require__(58);
+
+var _util2 = _interopRequireDefault(_util);
+
+__webpack_require__(227);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -116,49 +120,117 @@ var Tabs = function () {
 
 var Collection = function () {
 	function Collection() {
+		var _this2 = this;
+
 		_classCallCheck(this, Collection);
 
 		this.collection = this.constructor.name.toLowerCase();
 
 		this.el = {
 			form: (0, _jquery2.default)('#' + this.collection + ' .form'),
+			uploader: (0, _jquery2.default)('#' + this.collection + ' .uploader'),
+			gallery: (0, _jquery2.default)('#' + this.collection + ' .gallery'),
 			btn: {
 				create: (0, _jquery2.default)('#' + this.collection + ' .create'),
 				edit: (0, _jquery2.default)('#' + this.collection + ' .edit'),
 				delete: (0, _jquery2.default)('#' + this.collection + ' .delete'),
 
 				cancel: (0, _jquery2.default)('#' + this.collection + ' .cancel'),
-				submit: (0, _jquery2.default)('#' + this.collection + ' .submit')
+				submit: (0, _jquery2.default)('#' + this.collection + ' .submit'),
+
+				upload: (0, _jquery2.default)('#' + this.collection + ' .upload')
 			}
 		};
+
+		this.el.btn.upload.on('click', function () {
+			return _this2.upload();
+		});
+		this.el.gallery.on('click', '.erase', function (event) {
+			if (window.confirm('Zmazať obrázok?')) _this2.erase((0, _jquery2.default)(event.target).data('filename'), (0, _jquery2.default)(event.target).closest('tr'));
+		});
 	}
 
 	_createClass(Collection, [{
+		key: 'uploader',
+		value: function uploader(show) {
+			this.el.uploader.toggle(show ? true : false);
+		}
+	}, {
+		key: 'gallery',
+		value: function gallery(filelist, filedata) {
+			var tbody = this.el.gallery.find('tbody').empty();
+			var template = this.el.gallery.find('.template');
+
+			this.el.gallery.toggle(filelist && filelist.length ? true : false);
+			if (!filelist) return;
+
+			filelist.forEach(function (file) {
+				var filename = _util2.default.filenamize(file);
+				var data = filedata && filedata[filename];
+
+				var row = template.clone().removeClass('template');
+				row.find('img').attr({ src: _util2.default.thumbnailize(file) });
+				row.find('.erase').data({ filename: filename });
+				['sk', 'en'].forEach(function (lang) {
+					return row.find('[name=filedesc_' + lang + ']').val(data && data.description[lang]).data({ filename: filename, lang: lang });
+				});
+				tbody.append(row);
+			});
+		}
+	}, {
 		key: 'send',
 		value: function send(action) {
-			var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.el.form.find('[name="id"]').val();
+			var _this3 = this;
+
+			var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.el.form.find('[name=id]').val();
 
 			var method = action == 'submit' ? id.length ? 'put' : 'post' : 'delete';
-			var data = action == 'submit' ? this.structurize(this.el.form.prop('elements')) : null;
-			var callback = function callback() {
-				return window.location.reload();
-			};
+			var data = action == 'submit' ? this.structurize(this.el.form.prop('elements'), this.el.gallery.find('tbody tr [name*=filedesc]')) : null;
 
 			fetch('/admin/' + this.collection, {
 				method: method,
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ id: id, data: data })
 			}).then(function (res) {
-				return res.ok ? res.json() : null;
-			}).then(function (data) {
-				return callback.call(undefined, data);
+				return res.ok ? window.location.reload() : console.error('Error: ', _this3.collection + '/' + method);
+			}).catch(function (err) {
+				return console.error('Error: ', err);
+			});
+		}
+	}, {
+		key: 'upload',
+		value: function upload() {
+			var _this4 = this;
+
+			var files = this.el.uploader.find('[name=files]').prop('files');
+			if (files.length == 0) return;
+
+			var data = new FormData();
+			for (var i = 0; i < files.length; i++) {
+				data.append('files', files[i]);
+			}fetch('/admin/upload/' + this.el.uid.val(), {
+				method: 'post',
+				body: data
+			}).then(function (res) {
+				return res.ok ? window.location.reload() : console.error('Error: ', _this4.collection + '/upload');
+			}).catch(function (err) {
+				return console.error('Error: ', err);
+			});
+		}
+	}, {
+		key: 'erase',
+		value: function erase(filename, row) {
+			var _this5 = this;
+
+			fetch('/admin/erase/' + this.el.uid.val() + '/' + filename, { method: 'delete' }).then(function (res) {
+				return res.ok ? row.remove() : console.error('Error: ', _this5.collection + '/erase');
 			}).catch(function (err) {
 				return console.error('Error: ', err);
 			});
 		}
 	}, {
 		key: 'structurize',
-		value: function structurize(fields) {
+		value: function structurize(fields, filedescs) {
 			var result = {
 				title: {
 					sk: fields.title_sk.value,
@@ -171,14 +243,27 @@ var Collection = function () {
 				map: fields.map.value,
 				region: fields.region.value
 			};
-			if (fields.position && fields.label && fields.folder) Object.assign(result, {
+			if (fields.position && fields.label) Object.assign(result, {
 				position: {
 					left: fields.position.value.split(',')[0],
-					top: fields.position.value.split(',')[1]
+					top: fields.position.value.split(',')[1] || ''
 				},
-				label: fields.label.value,
-				folder: fields.folder.value
+				label: fields.label.value
 			});
+
+			if (filedescs.length) {
+				var filedata = {};
+				filedescs.each(function (i, filedesc) {
+					if (filedesc.value) {
+						var filename = (0, _jquery2.default)(filedesc).data('filename');
+						var lang = (0, _jquery2.default)(filedesc).data('lang');
+
+						if (filedata[filename] == undefined) filedata[filename] = { description: {} };
+						filedata[filename].description[lang] = filedesc.value;
+					}
+				});
+				Object.assign(result, { filedata: filedata });
+			}
 
 			return result;
 		}
@@ -193,21 +278,22 @@ var Articles = function (_Collection) {
 	function Articles() {
 		_classCallCheck(this, Articles);
 
-		var _this2 = _possibleConstructorReturn(this, (Articles.__proto__ || Object.getPrototypeOf(Articles)).call(this));
+		var _this6 = _possibleConstructorReturn(this, (Articles.__proto__ || Object.getPrototypeOf(Articles)).call(this));
 
-		Object.assign(_this2.el, {
+		Object.assign(_this6.el, {
 			maps: (0, _jquery2.default)('#articles .maps a'),
-			regions: (0, _jquery2.default)('#articles .regions a')
+			regions: (0, _jquery2.default)('#articles .regions a'),
+			uid: (0, _jquery2.default)('#articles [name=region]')
 		});
 
-		_this2.el.maps.add(_this2.el.regions).on('click', function (evt) {
-			return _this2.toggle((0, _jquery2.default)(evt.target));
-		}).filter(_this2.el.maps.first().add(_this2.el.regions.first())).click();
+		_this6.el.maps.add(_this6.el.regions).on('click', function (evt) {
+			return _this6.toggle((0, _jquery2.default)(evt.target));
+		}).filter(_this6.el.maps.first().add(_this6.el.regions.first())).click();
 
-		_this2.el.btn.submit.on('click', function () {
-			return _this2.send('submit');
+		_this6.el.btn.submit.on('click', function () {
+			return _this6.send('submit');
 		});
-		return _this2;
+		return _this6;
 	}
 
 	_createClass(Articles, [{
@@ -227,6 +313,10 @@ var Articles = function (_Collection) {
 			});
 
 			this.el[type + 's'].removeClass('selected').filter(link).addClass('selected');
+
+			var show = this.el.uid.val() !== 'all' && (0, _jquery2.default)('#articles [name=map]').val() == 'all';
+			this.uploader(show && article);
+			this.gallery(show && article && data.regions[this.el.uid.val()].filelist, article && article.filedata);
 		}
 	}]);
 
@@ -239,26 +329,27 @@ var Pois = function (_Collection2) {
 	function Pois() {
 		_classCallCheck(this, Pois);
 
-		var _this3 = _possibleConstructorReturn(this, (Pois.__proto__ || Object.getPrototypeOf(Pois)).call(this));
+		var _this7 = _possibleConstructorReturn(this, (Pois.__proto__ || Object.getPrototypeOf(Pois)).call(this));
 
-		Object.assign(_this3.el, {
-			pois: (0, _jquery2.default)('#pois .pois')
-		});
-
-		_this3.el.btn.create.add(_this3.el.btn.edit).on('click', function (evt) {
-			return _this3.toggle((0, _jquery2.default)(evt.target).data('id'));
-		});
-		_this3.el.btn.cancel.on('click', function () {
-			_this3.el.pois.show();_this3.el.form.parent().hide();
+		Object.assign(_this7.el, {
+			pois: (0, _jquery2.default)('#pois .pois'),
+			uid: (0, _jquery2.default)('#pois [name=id]')
 		});
 
-		_this3.el.btn.submit.on('click', function () {
-			return _this3.send('submit');
+		_this7.el.btn.create.add(_this7.el.btn.edit).on('click', function (evt) {
+			return _this7.toggle((0, _jquery2.default)(evt.target).data('id'));
 		});
-		_this3.el.btn.delete.on('click', function () {
-			return _this3.send('delete', (0, _jquery2.default)(event.target).data('id'));
+		_this7.el.btn.cancel.on('click', function () {
+			_this7.el.pois.show();_this7.el.form.parent().hide();
 		});
-		return _this3;
+
+		_this7.el.btn.submit.on('click', function () {
+			return _this7.send('submit');
+		});
+		_this7.el.btn.delete.on('click', function () {
+			if (window.confirm('Zmazať bod záujmu?')) _this7.send('delete', (0, _jquery2.default)(event.target).data('id'));
+		});
+		return _this7;
 	}
 
 	_createClass(Pois, [{
@@ -272,13 +363,15 @@ var Pois = function (_Collection2) {
 				return poi.$loki == id;
 			});
 			fields.id.value = poi ? poi.$loki : '';
-			['map', 'region', 'label', 'folder'].forEach(function (field) {
-				return fields[field].value = poi ? poi[field] : '';
+			['map', 'region', 'label'].forEach(function (field) {
+				return fields[field].value = poi ? poi[field] : fields[field].options[0].value;
 			});
 			['title_sk', 'title_en', 'description_sk', 'description_en'].forEach(function (field) {
 				return fields[field].value = poi ? poi[field.split('_')[0]][field.split('_')[1]] : '';
 			});
-			fields.position.value = poi ? poi.position.left + ',' + poi.position.top : '';
+			fields.position.value = poi && poi.position.left ? poi.position.left + ',' + poi.position.top : '';
+			this.gallery(poi && poi.filelist, poi && poi.filedata);
+			this.uploader(this.el.uid.val());
 		}
 	}]);
 
@@ -287,22 +380,23 @@ var Pois = function (_Collection2) {
 
 var Picker = function () {
 	function Picker() {
-		var _this4 = this;
+		var _this8 = this;
 
 		_classCallCheck(this, Picker);
 
+		var form = (0, _jquery2.default)('#pois .form');
 		this.el = {
-			region: (0, _jquery2.default)('#pois .form [name=region]'),
-			map: (0, _jquery2.default)('#pois .form [name=map]'),
-			position: (0, _jquery2.default)('#pois .form [name=position]'),
-			picker: (0, _jquery2.default)('#pois .form .picker')
+			region: form.find('[name=region]'),
+			map: form.find('[name=map]'),
+			position: form.find('[name=position]'),
+			picker: form.find('.picker')
 		};
 
 		this.el.position.on('focus blur', function (event) {
-			return _this4.toggle(event.type == 'focus');
+			return _this8.toggle(event.type == 'focus');
 		});
 		this.el.picker.on('mousedown', function (event) {
-			return _this4.point({ top: event.originalEvent.pageY, left: event.originalEvent.pageX });
+			return _this8.point({ top: event.originalEvent.pageY, left: event.originalEvent.pageX });
 		});
 	}
 
@@ -334,17 +428,19 @@ var Picker = function () {
 	new Articles();
 	new Pois();
 	new Picker();
+
+	// setTimeout(() => $('.button.edit').first().click(), 200);
 });
 
 /***/ }),
 
-/***/ 226:
+/***/ 227:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(227);
+var content = __webpack_require__(228);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -370,7 +466,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 227:
+/***/ 228:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(54)(undefined);
@@ -378,7 +474,7 @@ exports = module.exports = __webpack_require__(54)(undefined);
 
 
 // module
-exports.push([module.i, "/* colors */\n/* reset */\nbody {\n  margin: 0;\n  padding: 0;\n  background-color: #cdd5dc;\n  font: normal 12pt sans-serif; }\n\ntable {\n  border-spacing: 0; }\n\nul {\n  margin: 0;\n  padding: 0;\n  list-style: none; }\n\n/* commons */\na {\n  display: block;\n  color: black;\n  text-decoration: none; }\n\nlabel {\n  display: block;\n  font: bold 11pt/1.8 sans-serif;\n  color: #465768; }\n  label::after {\n    content: ':'; }\n\n.form {\n  columns: 300px 2;\n  margin-bottom: 10px; }\n  .form > * {\n    margin-bottom: 10px; }\n  .form input,\n  .form select,\n  .form textarea {\n    display: block;\n    width: 100%;\n    padding: 10px;\n    background-color: white;\n    border: solid 1px #9fa8a3;\n    font: normal 12pt sans-serif;\n    box-sizing: border-box;\n    border-radius: 0;\n    -webkit-appearance: none; }\n  .form textarea {\n    height: 250px; }\n  .form .table {\n    width: 100%; }\n\n.bar {\n  display: flex;\n  flex-wrap: wrap;\n  padding: 2.5px;\n  margin-bottom: 10px;\n  background-color: #e9f0f7; }\n  .bar.center {\n    justify-content: center; }\n  .bar > * {\n    margin: 2.5px; }\n\n.button {\n  padding: 10px 20px;\n  background-color: #009be5;\n  color: white;\n  cursor: pointer; }\n  .button.alt {\n    background-color: #82ba02; }\n\n.table td {\n  padding: 5px; }\n\n.table thead {\n  font: bold 11pt/1.8 sans-serif;\n  color: #465768; }\n\n.table tbody td {\n  border-top: solid #cdd5dc 1px;\n  background-color: #e9f0f7; }\n\n.table .actions {\n  width: 1%;\n  white-space: nowrap; }\n  .table .actions .button {\n    display: inline-block; }\n\n.maps .button:not(.selected),\n.regions .button:not(.selected) {\n  background-color: white;\n  color: black;\n  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2); }\n\n/* tabs */\n.tabs {\n  padding: 10px;\n  background-color: #596a83; }\n  .tabs ul {\n    display: flex; }\n  .tabs .button:not(.selected) {\n    background-color: transparent; }\n\n.panels {\n  max-width: 980px;\n  padding: 30px; }\n  .panels .panel:not(:first-child) {\n    display: none; }\n\n/* articles */\n/* points */\n#pois .wrapper {\n  display: none; }\n\n#pois .form .labels label,\n#pois .form [name=\"map\"], #pois .form [name=\"region\"],\n#pois .form [name=\"position\"], #pois .form [name=\"label\"] {\n  display: inline-block;\n  width: calc(50% - 4px); }\n\n#pois .form .picker {\n  display: none;\n  position: absolute;\n  left: 30px;\n  width: calc(100vw - 64px);\n  max-width: 980px;\n  margin-top: 3px;\n  background-color: white;\n  box-shadow: inset 0 0 0 1px #9fa8a3;\n  cursor: crosshair; }\n  #pois .form .picker img {\n    width: 100%; }\n", ""]);
+exports.push([module.i, "/* colors */\n/* reset */\nbody {\n  margin: 0;\n  padding: 0;\n  background-color: #cdd5dc;\n  font: normal 12pt sans-serif; }\n\ntable {\n  border-spacing: 0; }\n\nul {\n  margin: 0;\n  padding: 0;\n  list-style: none; }\n\nimg {\n  display: block; }\n\n/* commons */\na {\n  display: block;\n  color: black;\n  text-decoration: none; }\n\nlabel {\n  display: block;\n  font: bold 11pt/1.8 sans-serif;\n  color: #465768; }\n  label::after {\n    content: ':'; }\n\ninput,\nselect,\ntextarea {\n  display: block;\n  width: 100%;\n  padding: 10px;\n  background-color: white;\n  border: solid 1px #9fa8a3;\n  font: normal 12pt sans-serif;\n  box-sizing: border-box;\n  border-radius: 0;\n  resize: none;\n  -webkit-appearance: none; }\n\n.form {\n  columns: 300px 2;\n  margin-bottom: 10px; }\n  .form > * {\n    margin-bottom: 10px; }\n  .form textarea {\n    height: 250px; }\n\n.bar {\n  display: flex;\n  flex-wrap: wrap;\n  padding: 2.5px;\n  margin-bottom: 10px;\n  background-color: #e9f0f7; }\n  .bar.center {\n    justify-content: center; }\n  .bar > * {\n    margin: 2.5px; }\n\n.button {\n  padding: 10px 20px;\n  background-color: #009be5;\n  color: white;\n  cursor: pointer; }\n  .button.alt {\n    background-color: #82ba02; }\n\n.table {\n  width: 100%; }\n  .table td {\n    padding: 5px; }\n  .table thead {\n    font: bold 11pt/1.8 sans-serif;\n    color: #465768; }\n  .table tbody td {\n    border-top: solid #cdd5dc 1px;\n    background-color: #e9f0f7; }\n  .table .actions {\n    width: 1%;\n    white-space: nowrap; }\n    .table .actions .button {\n      display: inline-block; }\n\n.maps .button:not(.selected),\n.regions .button:not(.selected) {\n  background-color: white;\n  color: black;\n  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2); }\n\n/* tabs */\n.tabs {\n  padding: 10px;\n  background-color: #596a83; }\n  .tabs ul {\n    display: flex; }\n  .tabs .button:not(.selected) {\n    background-color: transparent; }\n\n.panels {\n  max-width: 980px;\n  padding: 30px; }\n  .panels .panel:not(:first-child) {\n    display: none; }\n\n/* articles */\n/* points */\n#pois .wrapper {\n  display: none; }\n\n#pois .form .labels label,\n#pois .form [name=\"map\"], #pois .form [name=\"region\"],\n#pois .form [name=\"position\"], #pois .form [name=\"label\"] {\n  display: inline-block;\n  width: calc(50% - 4px); }\n\n#pois .form .picker {\n  display: none;\n  position: absolute;\n  left: 30px;\n  width: calc(100vw - 64px);\n  max-width: 980px;\n  margin-top: 3px;\n  background-color: white;\n  box-shadow: inset 0 0 0 1px #9fa8a3;\n  cursor: crosshair; }\n  #pois .form .picker img {\n    width: 100%; }\n\n/* uploader, gallery */\n#articles .uploader,\n#articles .gallery,\n#pois .uploader,\n#pois .gallery {\n  display: none;\n  width: 100%;\n  margin-top: -10px;\n  margin-bottom: 20px; }\n\n#articles .uploader input,\n#pois .uploader input {\n  width: calc(100% - (96px + 16px));\n  height: 38px;\n  padding: 8px; }\n\n#articles .uploader .button,\n#pois .uploader .button {\n  float: right;\n  width: 56px;\n  text-align: center; }\n\n#articles .gallery .template,\n#pois .gallery .template {\n  display: none; }\n\n#articles .gallery td,\n#pois .gallery td {\n  padding: 6px 8px; }\n  #articles .gallery td:first-child,\n  #pois .gallery td:first-child {\n    padding-left: 0; }\n  #articles .gallery td:last-child,\n  #pois .gallery td:last-child {\n    padding-right: 0; }\n\n#articles .gallery thead td,\n#pois .gallery thead td {\n  padding: 0 8px; }\n\n#articles .gallery tbody tr:first-child td,\n#pois .gallery tbody tr:first-child td {\n  padding-top: 0; }\n\n#articles .gallery tbody tr:last-child td,\n#pois .gallery tbody tr:last-child td {\n  padding-bottom: 0; }\n\n#articles .gallery .thumbnail,\n#articles .gallery .actions,\n#pois .gallery .thumbnail,\n#pois .gallery .actions {\n  width: 96px; }\n\n#articles .gallery img,\n#pois .gallery img {\n  height: 62px;\n  border: solid 1px #9fa8a3; }\n\n#articles .gallery textarea,\n#pois .gallery textarea {\n  height: 64px;\n  padding: 5px; }\n\n@media all and (max-width: 690px) {\n  #articles .gallery,\n  #pois .gallery {\n    display: block; }\n    #articles .gallery thead,\n    #articles .gallery tbody,\n    #pois .gallery thead,\n    #pois .gallery tbody {\n      display: block; }\n    #articles .gallery thead tr,\n    #pois .gallery thead tr {\n      display: block; }\n      #articles .gallery thead tr td:not(:first-child),\n      #pois .gallery thead tr td:not(:first-child) {\n        display: none; }\n    #articles .gallery tbody tr,\n    #pois .gallery tbody tr {\n      display: block;\n      position: relative;\n      margin-bottom: 12px; }\n      #articles .gallery tbody tr td,\n      #pois .gallery tbody tr td {\n        display: block;\n        padding: 2px 8px; }\n        #articles .gallery tbody tr td.thumbnail,\n        #pois .gallery tbody tr td.thumbnail {\n          position: absolute;\n          top: 34px;\n          left: 0; }\n        #articles .gallery tbody tr td.actions,\n        #pois .gallery tbody tr td.actions {\n          position: absolute;\n          top: 48px;\n          right: 0; }\n        #articles .gallery tbody tr td:not(.thumbnail):not(.actions),\n        #pois .gallery tbody tr td:not(.thumbnail):not(.actions) {\n          margin: 0 104px; }\n      #articles .gallery tbody tr:first-child td,\n      #pois .gallery tbody tr:first-child td {\n        padding-top: 2px; }\n      #articles .gallery tbody tr:last-child td,\n      #pois .gallery tbody tr:last-child td {\n        padding-bottom: 2px; } }\n", ""]);
 
 // exports
 
@@ -11182,6 +11278,23 @@ module.exports = function (css) {
 	return fixedCss;
 };
 
+
+/***/ }),
+
+/***/ 58:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+	thumbnailize: function thumbnailize(path) {
+		return path.replace(/^(.*)\.([^.]+)$/, '$1_thumbnail.$2');
+	},
+	filenamize: function filenamize(path) {
+		return path.replace(/^(.*)[\/\\](.*)\.([^.]+)$/, '$2.$3');
+	}
+};
 
 /***/ })
 

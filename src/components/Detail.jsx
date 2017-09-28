@@ -2,6 +2,7 @@ import React from 'react'
 import Transition from 'react-addons-css-transition-group';
 
 import $ from 'jquery'
+import util from '../util'
 
 const Detail = props => (
 	<section className={ `detail ${ props.maximized ? 'maximized' : '' }` }>
@@ -38,17 +39,20 @@ const Actions = props => {
 class Gallery extends React.Component {
 	componentDidUpdate(prevProps) {
 		const thumbnails = this.refs.thumbnails
-		const thumbnail = thumbnails.querySelector(`[src*="${ this.props.image }"]`).parentNode.parentNode;
+		const thumbnail = this.props.image ? thumbnails.querySelector(`[src*="${ util.thumbnailize(this.props.image) }"]`).parentNode.parentNode : null;
 
-		if (thumbnails.scrollLeft > thumbnail.offsetLeft)
+		if (thumbnail && thumbnails.scrollLeft > thumbnail.offsetLeft)
 			$(thumbnails).animate({ scrollLeft: thumbnail.offsetLeft }, .33 * 1000);
-		if (thumbnails.scrollLeft + thumbnails.offsetWidth - thumbnail.offsetWidth < thumbnail.offsetLeft)
+		if (thumbnail && thumbnails.scrollLeft + thumbnails.offsetWidth - thumbnail.offsetWidth < thumbnail.offsetLeft)
 			$(thumbnails).animate({ scrollLeft: thumbnail.offsetLeft - (thumbnails.offsetWidth - thumbnail.offsetWidth) }, .33 * 1000);
 	}
 
 	render () {
 		const prevImage = this.props.images[ this.props.images.indexOf(this.props.image) - 1 ]
 		const nextImage = this.props.images[ this.props.images.indexOf(this.props.image) + 1 ]
+
+		let filename = this.props.image ? util.filenamize(this.props.image) : null
+		let description = this.props.texts && this.props.texts[ filename ] && this.props.texts[ filename ].description[ this.props.lang ]
 
 		return (
 			<div>
@@ -60,7 +64,12 @@ class Gallery extends React.Component {
 					<Transition component="ul" className="images" transitionName={ this.props.anim.name } transitionEnterTimeout={ this.props.anim.enter } transitionLeaveTimeout={ this.props.anim.leave }>
 						{ this.props.image &&
 							<li key={ this.props.image }>
-								<img src={ `${ this.props.paths.images }${ this.props.image }` } />
+								<img src={ this.props.image } />
+								{ description &&
+									<div className="description">
+										{ description }
+									</div>
+								}
 							</li>
 						}
 					</Transition>
@@ -69,7 +78,7 @@ class Gallery extends React.Component {
 					{ this.props.images.map(image => (
 						<li key={ image }>
 							<a className={ image == this.props.image ? 'selected' : '' } onClick={ () => this.props.onClick(image) }>
-								<img src={ `${ this.props.paths.thumbnails }${ image }` } />
+								<img src={ util.thumbnailize(image) } />
 							</a>
 						</li>
 					))}

@@ -82,7 +82,7 @@ export default class App extends React.Component {
 	setPoi(poi) {
 		this.setState({ poi })
 		if (this.state.image)
-			this.setImage(this.pois[ poi ].files[ 0 ])
+			this.setImage(this.pois[ poi ].filelist[ 0 ])
 	}
 
 	setImage(image, reset) {
@@ -109,7 +109,7 @@ export default class App extends React.Component {
 		let { region, map, poi, image, view, lang } = this.state
 
 		let article = data.articles[ region || 'all' ][ map || 'all' ]
-		if (article.title[lang].length == 0 && article.description.length == 0)
+		if (article.title[ lang ].length == 0 && article.description[ lang ].length == 0)
 			article = data.articles[ region ].all;
 
         return (
@@ -131,7 +131,7 @@ export default class App extends React.Component {
 								<ArticleDescription text={ article.description } lang={ lang } />
 								{ region ?
 									<div>
-										<Thumbnails images={ data.regions[ region ].files.slice(0, 6) } paths={ data.paths } onClick={ this.setImage.bind(this) } />
+										<Thumbnails images={ data.regions[ region ].filelist.slice(0, 6) } onClick={ this.setImage.bind(this) } />
 										<MapList maps={ data.maps } map={ map } onClick={ map => this.setMap(map) } lang={ lang } />
 									</div> :
 									<RegionList regions={ data.regions } onClick={ region => this.setRegion(region) } lang={ lang } />
@@ -153,7 +153,7 @@ export default class App extends React.Component {
 								{ poi &&
 									<PoiDescription text={ data.pois[ poi ].description } lang={ lang } />
 								}
-								<Gallery images={ poi ? data.pois[ poi ].files : data.regions[ region ].files } image={ image } paths={ data.paths } onClick={ this.setImage.bind(this) } anim={ anim } />
+								<Gallery images={ poi ? data.pois[ poi ].filelist : data.regions[ region ].filelist } image={ image } texts={ poi ? data.pois[ poi ].filedata : data.articles[ region ].all.filedata } onClick={ this.setImage.bind(this) } lang={ lang } anim={ anim } />
 							</Content>
 						</Detail>
 					}

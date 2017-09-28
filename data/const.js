@@ -40,11 +40,11 @@ module.exports = {
 			position: { top: -96, left: 69, width: 564, height: 450 }
 		},
 		tatry: {
-			title: { sk: 'Vysoké Tatry', en: 'High Tatras' },
+			title: { sk: 'Tatry', en: 'Tatras' },
 			position: { top: 166.8, left: 18.2, width: 250.5, height: 200 }
 		},
-		nizke_tatry: {
-			title: { sk: 'Nízke Tatry', en: 'Low Tatras' },
+		kralovoholske_tatry: {
+			title: { sk: 'Kráľovohoľské Tatry', en: 'Kráľova Hoľa Tatras' },
 			position: { top: 537.2, left: 35.4, width: 182.8, height: 145.9 }
 		},
 		podtatranska_kotlina: {
@@ -79,5 +79,10 @@ module.exports = {
 			title: { sk: 'Branisko', en: 'Branisko' },
 			position: { top: 461.3, left: 599.5, width: 234.9, height: 187.3 }
 		}
+	},
+
+	gallery: {
+		imageHeight: 743,
+		thumbnailHeight: 116
 	}
 };

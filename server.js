@@ -1,26 +1,24 @@
-const express = require('express');
-const parser = require('body-parser');
-const loki = require('lokijs');
-const fs = require('fs');
+const express = require('express')
+const parser = require('body-parser')
+const loki = require('lokijs')
+const fs = require('fs-extra')
 const path = require('path')
-// const locales = require('./locales');
-const constants = require('./data/const');
+const upload = require('multer')()
+const sharp = require('sharp')
 
-const app = express();
-const host = process.env.HOST || '127.0.0.1';
+const constants = require('./data/const')
+const util = require('./src/util')
+
+const app = express()
+const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000;
 
-const root = __dirname;
-const imgpath = path.join(root, 'data', 'images');
+const root = __dirname
+const filebase = path.join('data', 'files')
 
-let lang = 'sk';
 let data = {};
-/*
-let abcsort = (a, b) => {
-	a = a.title[lang]; b = b.title[lang];
-	return a < b ? -1 : (a > b ? 1 : 0);
-};
-*/
+let lang = 'sk';
+
 const db = new loki('data/db.js', {
 	autoload: true,
 	autoloadCallback: () => {
@@ -31,18 +29,24 @@ const db = new loki('data/db.js', {
 				all: dbcoll.data
 			};
 		});
-
-		// data.pois.sorted = data.pois.collection.chain().sort(abcsort).data();
-		data.pois.all.forEach(poi => {
-			try { poi.files = fs.readdirSync(path.join(imgpath, poi.folder)).filter(file => fs.lstatSync(path.join(imgpath, poi.folder, file)).isFile()).map(file => `${ poi.folder }/${ file }`); }
-			catch (err) { poi.files = []; }
-		});
 	}
 });
 
-for (let region in constants.regions) {
-	try { constants.regions[region].files = fs.readdirSync(path.join(imgpath, region)).filter(file => fs.lstatSync(path.join(imgpath, region, file)).isFile()).map(file => `${ region }/${ file }`); }
-	catch (err) { constants.regions[region].files = []; }
+const filelists = function () {
+	data.pois.all.forEach(poi => { //pois
+		try {
+			const dir = path.join(filebase, poi.$loki.toString())
+			poi.filelist = fs.readdirSync(dir).filter(file => fs.lstatSync(path.join(dir, file)).isFile() && file.indexOf('thumbnail') == -1).map(file => path.join(dir, file))
+		}
+		catch (err) { poi.filelist = [] }
+	});
+	for (let region of Object.keys(constants.regions).slice(1)) { //regions
+		try {
+			const dir = path.join(filebase, region)
+			constants.regions[region].filelist = fs.readdirSync(dir).filter(file => fs.lstatSync(path.join(dir, file)).isFile() && file.indexOf('thumbnail') == -1).map(file => path.join(dir, file))
+		}
+		catch (err) { constants.regions[region].filelist = [] }
+	}
 }
 
 app.use('/data', express.static( path.join(root, 'data') ));
@@ -53,27 +57,41 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(root, 'src', 'views'));
 
 //app
-const paths = {
-	images: 'data/images/',
-	thumbnails: 'data/images/thumbnails/'
-}
 app.get('/data.js', (req, res) => {
-	res.render('data.ejs', { pois: data.pois.all, articles: data.articles.all, maps: constants.maps, regions: constants.regions, paths, lang });
+	filelists()
+	res.render('data.ejs', { pois: data.pois.all, articles: data.articles.all, maps: constants.maps, regions: constants.regions, lang });
 });
-/*
-app.get('/lang/:lang', (req, res) => {
-	lang = req.params.lang;
-	data.pois.sorted = data.pois.collection.chain().sort(abcsort).data();
-	res.redirect('/');
-});
-*/
-
 
 //admin
 app.get('/admin', (req, res) => {
+	filelists()
 	res.render('admin.ejs', { pois: data.pois.all, articles: data.articles.all, maps: constants.maps, regions: constants.regions });
 });
 
+//admin - file operations
+app.post('/admin/upload/:id', upload.array('files'), (req, res) => {
+	const dir = path.join(filebase, req.params.id)
+	if (!fs.existsSync(dir))
+		fs.mkdirSync(dir)
+
+	let results = [];
+	req.files.forEach(file => results.push(
+		sharp(file.buffer).resize(undefined, constants.gallery.imageHeight).jpeg({ quality: 85 }).toFile(path.join(dir, file.originalname)),
+		sharp(file.buffer).resize(undefined, constants.gallery.thumbnailHeight).jpeg({ quality: 85 }).toFile(path.join(dir, util.thumbnailize(file.originalname)))
+	))
+	Promise.all(results)
+		.then(() => res.sendStatus(200))
+		.catch(err => { res.sendStatus(500); console.error('Error: ', err) })
+});
+
+app.delete('/admin/erase/:id/:filename', (req, res) => {
+	const dir = path.join(filebase, req.params.id)
+	fs.removeSync( path.join(dir, req.params.filename) )
+	fs.removeSync( path.join(dir, util.thumbnailize(req.params.filename)) )
+	res.sendStatus(200)
+});
+
+//admin - database operations
 app.post('/admin/:collection', (req, res) => {
 	let collection = req.params.collection;
 	res.send( data[ collection ].collection.insert(req.body.data) );
@@ -84,6 +102,7 @@ app.put('/admin/:collection', (req, res) => {
 	let collection = req.params.collection;
 	let doc = data[ collection ].collection.get(req.body.id);
 	Object.assign(doc, req.body.data);
+	delete doc.filelist;
 	res.send( data[ collection ].collection.update(doc) );
 	db.saveDatabase('db');
 });
@@ -92,6 +111,9 @@ app.delete('/admin/:collection', (req, res) => {
 	let collection = req.params.collection;
 	res.send( data[ collection ].collection.remove(data[ collection ].collection.get(req.body.id)) );
 	db.saveDatabase('db');
+
+	const dir = path.join(filebase, req.body.id.toString())
+	fs.removeSync(dir)
 });
 
 //server
@@ -147,3 +169,11 @@ app.get('/seed', (req, res) => {
 	db.saveDatabase('db');
 	res.redirect('/admin')
 });
+
+/*
+	let abcsort = (a, b) => {
+		a = a.title[lang]; b = b.title[lang];
+		return a < b ? -1 : (a > b ? 1 : 0);
+	};
+	data.pois.sorted = data.pois.collection.chain().sort(abcsort).data();
+*/

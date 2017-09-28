@@ -8,8 +8,9 @@
 	<script src="admin.bundle.js"></script>
 	<script>
 		let data = {
+			pois: <%- JSON.stringify(pois) %>,
 			articles: <%- JSON.stringify(articles) %>,
-			pois: <%- JSON.stringify(pois) %>
+			regions: <%- JSON.stringify(regions) %>
 		};
 
 		// console.log(data);
@@ -57,11 +58,6 @@
 					<div class="labels">
 						<label>Pozícia na mape</label>
 						<label>Popiska</label>
-						<!--
-						<label>Priečinok s fotkami</label>
-						-->
-						<input type="hidden" name="folder">
-
 						<input type="text" name="position">
 						<select name="label">
 							<option value="0">Pod bodom</option>
@@ -79,34 +75,34 @@
 						<label>Popis (anglicky)</label>
 						<textarea name="description_en"></textarea>
 					</div>
-					<!--
-					<table class="table files">
-						<thead>
-							<tr>
-								<th colspan="2"></th>
-								<th>Popis (slovensky)</th>
-								<th>Popis (anglicky)</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td class="handle"></td>
-								<td class="thumbnail"></td>
-								<td>
-									<textarea name="file_description_sk"></textarea>
-								</td>
-								<td>
-									<textarea name="file_description_en"></textarea>
-								</td>
-								<td class="actions">
-									<a class="button alt delete" data-id="">Delete</a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					-->
 				</form>
+
+				<table class="gallery">
+					<thead>
+						<tr>
+							<td><label>Galéria</label></td>
+							<td><label>Popis (slovensky)</label></td>
+							<td><label>Popis (anglicky)</label></td>
+						</tr>
+						<tr class="template">
+							<td class="thumbnail"><img /></td>
+							<td><textarea name="filedesc_sk"></textarea></td>
+							<td><textarea name="filedesc_en"></textarea></td>
+							<td class="actions">
+								<a class="button alt erase">Zmazať</a>
+							</td>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+
+				<div class="uploader">
+					<label>Nahrať obrázky</label>
+					<a class="button alt upload">Nahrať</a>
+					<input type="file" name="files" multiple="multiple" accept="image/jpeg,image/jpg,image/png" />
+				</div>
+
 				<div class="bar center">
 					<a class="button cancel">Zrušiť</a>
 					<a class="button submit">Uložiť</a>
@@ -118,28 +114,28 @@
 						<td>Región</td>
 						<td>Mapa</td>
 						<td>Nadpis</td>
-						<td>Priečinok s fotkami</td>
+						<td>Galéria</td>
 						<td></td>
 					</tr>
 				</thead>
 				<tbody>
 					<% for (let poi of pois.slice(0).reverse()) { %>
 					    <tr class="poi">
-							<td class="region">
+							<td>
 								<%= regions[poi.region].title.sk %>
 							</td>
-							<td class="map">
+							<td>
 								<%= maps[poi.map].title.sk %>
 							</td>
-							<td class="title">
+							<td>
 								<%= poi.title.sk %>
 							</td>
-							<td class="folder">
-								<%= poi.folder %>
+							<td>
+								<%= poi.filelist.length ? poi.filelist.length : '-' %>
 							</td>
 							<td class="actions">
-								<a class="button alt edit" data-id="<%= poi.$loki %>">Edit</a>
-								<a class="button alt delete" data-id="<%= poi.$loki %>">Delete</a>
+								<a class="button alt edit" data-id="<%= poi.$loki %>">Upraviť</a>
+								<a class="button alt delete" data-id="<%= poi.$loki %>">Zmazať</a>
 							</td>
 					    </tr>
 					<% } %>
@@ -180,6 +176,33 @@
 					<textarea name="description_en"></textarea>
 				</div>
 			</form>
+
+			<table class="gallery">
+				<thead>
+					<tr>
+						<td><label>Galéria</label></td>
+						<td><label>Popis (slovensky)</label></td>
+						<td><label>Popis (anglicky)</label></td>
+					</tr>
+					<tr class="template">
+						<td class="thumbnail"><img /></td>
+						<td><textarea name="filedesc_sk"></textarea></td>
+						<td><textarea name="filedesc_en"></textarea></td>
+						<td class="actions">
+							<a class="button alt erase">Zmazať</a>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+
+			<div class="uploader">
+				<label>Pridať obrázky</label>
+				<a class="button alt upload">Nahrať</a>
+				<input type="file" name="files" multiple="multiple" accept="image/jpeg,image/jpg,image/png" />
+			</div>
+
 			<div class="bar center">
 				<a class="button submit">Uložiť</a>
 			</div>

@@ -3,7 +3,7 @@ import React from 'react';
 import pieniny from './pieniny'
 import spisska_magura from './spisska_magura'
 import tatry from './tatry'
-import nizke_tatry from './nizke_tatry'
+import kralovoholske_tatry from './kralovoholske_tatry'
 import podtatranska_kotlina from './podtatranska_kotlina'
 import hornadska_kotlina from './hornadska_kotlina'
 import levocske_vrchy from './levocske_vrchy'
@@ -17,7 +17,7 @@ export {
 	pieniny,
 	spisska_magura,
 	tatry,
-	nizke_tatry,
+	kralovoholske_tatry,
 	podtatranska_kotlina,
 	hornadska_kotlina,
 	levocske_vrchy,

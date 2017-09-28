@@ -48,7 +48,7 @@ const Thumbnails = props => props.images.length ? (
 	<ul className="thumbnails">
 		{ props.images.map(image => (
 			<li key={ image }>
-				<a style={{ backgroundImage: `url(${ props.paths.thumbnails }${ image })` }} onClick={ () => props.onClick(image, true) } />
+				<a style={{ backgroundImage: `url(${ image.replace(/^(.*)\.([^.]+)$/, '$1_thumbnail.$2') })` }} onClick={ () => props.onClick(image, true) } />
 			</li>
 		))}
 	</ul>
