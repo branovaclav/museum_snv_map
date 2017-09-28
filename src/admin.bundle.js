@@ -77,7 +77,7 @@ var _jquery = __webpack_require__(34);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _util = __webpack_require__(58);
+var _util = __webpack_require__(35);
 
 var _util2 = _interopRequireDefault(_util);
 
@@ -448,7 +448,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(55)(content, options);
+var update = __webpack_require__(56)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -469,7 +469,7 @@ if(false) {
 /***/ 228:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(54)(undefined);
+exports = module.exports = __webpack_require__(55)(undefined);
 // imports
 
 
@@ -10742,7 +10742,24 @@ return jQuery;
 
 /***/ }),
 
-/***/ 54:
+/***/ 35:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+	thumbnailize: function thumbnailize(path) {
+		return path.replace(/^(.*)\.([^.]+)$/, '$1_thumbnail.$2');
+	},
+	filenamize: function filenamize(path) {
+		return path.replace(/^(.*)[\/\\](.*)\.([^.]+)$/, '$2.$3');
+	}
+};
+
+/***/ }),
+
+/***/ 55:
 /***/ (function(module, exports) {
 
 /*
@@ -10825,7 +10842,7 @@ function toComment(sourceMap) {
 
 /***/ }),
 
-/***/ 55:
+/***/ 56:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -10871,7 +10888,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(56);
+var	fixUrls = __webpack_require__(57);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -11185,7 +11202,7 @@ function updateLink (link, options, obj) {
 
 /***/ }),
 
-/***/ 56:
+/***/ 57:
 /***/ (function(module, exports) {
 
 
@@ -11278,23 +11295,6 @@ module.exports = function (css) {
 	return fixedCss;
 };
 
-
-/***/ }),
-
-/***/ 58:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = {
-	thumbnailize: function thumbnailize(path) {
-		return path.replace(/^(.*)\.([^.]+)$/, '$1_thumbnail.$2');
-	},
-	filenamize: function filenamize(path) {
-		return path.replace(/^(.*)[\/\\](.*)\.([^.]+)$/, '$2.$3');
-	}
-};
 
 /***/ })
 
