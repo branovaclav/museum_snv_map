@@ -31,6 +31,7 @@
 		&.close { background-position: 0 -60px; }
 		&.back { background-position: 0 -120px; }
 		&.forward { background-position: 0 -180px; }
+		&.return { background-position: 0 -240px; }
 
 		&:not(.disabled):active { background-color: rgba($accent-color-yellow, .25); }
 	}
@@ -64,6 +65,28 @@ $colors: (
 			&.stroke { stroke: $value; }
 		};
 	}
+}
+
+/* --- Back Button --- */
+.backbar {
+	position: fixed;
+	top: 25px;
+	left: 25px;
+	padding: 3px;
+
+	background-color: $panel-bkg-color;
+	border-radius: 50%;
+	box-shadow: 0 0 6px $shadow-color;
+	transition: transform $medium;
+	
+	.actions a {
+		width: 74px;
+		height: 74px;
+	}
+
+	&.hidden {
+		transform: translate(calc(-100% - 26px), 0);
+	}		
 }
 
 /* --- Animations --- */

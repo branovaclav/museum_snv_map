@@ -12,7 +12,7 @@ const Image = ({ map, region, anim }) => {
 	return (
 		<g className="map">
 			<Transition component="g" className="image" transitionName={ anim.name } transitionEnterTimeout={ anim.enter } transitionLeaveTimeout={ .5 * 1000 }>
-				<image key={ region || 'all' } xlinkHref={ `/images/maps/${ map || 'all' }/${ region || 'all' }@1x.png` } x={ pos.left } y={ pos.top } width={ pos.width } height={ pos.height } />
+				<image key={ region || 'all' } xlinkHref={ `/images/maps/${ map || 'all' }/${ region || 'all' }@${ data.settings.hiDPI ? '2x': '1x' }.png` } x={ pos.left } y={ pos.top } width={ pos.width } height={ pos.height } />
 			</Transition>
 		</g>
 	)
@@ -26,10 +26,12 @@ class Regions extends React.Component {
 	}
 
 	render() {
+		const { scale } = this.props.view;
+
 		return (
-			<g className={ `regions ${ this.props.region ? 'hidden' : 'animated' }` }>
+			<g className={ `regions ${ this.props.region ? 'detail' : 'animated' }` } style={{ strokeWidth: `${ 1.25 / (scale || 1) }px` }}>
 				{ Object.keys(regions).map(region => (
-					React.createElement(regions[ region ], { key: region, ref: region, region: region, onClick: () => this.props.onClick(region) })
+					React.createElement(regions[ region ], { key: region, ref: region, region: region, active: region == this.props.region, onClick: () => this.props.onClick(region) })
 				))}
 			</g>
 		)
@@ -55,7 +57,7 @@ const Pois = props => (
 	</Transition>
 )
 
-const Labels = props => (
+const PoiLabels = props => (
 	<Transition component="ul" className="labels" transitionName={ props.anim.name } transitionEnterTimeout={ props.anim.enter } transitionLeaveTimeout={ props.anim.leave }>
 		{ Object.keys(props.pois).map(poi => {
 			const point = props.pois[ poi ]
@@ -64,6 +66,20 @@ const Labels = props => (
 			return (
 				<li key={ poi } className={ `label ${ location } ${ poi == props.poi ? 'selected' : '' }` } style={{ transform }}>
 					<span>{ point.title[ props.lang ] }</span>
+				</li>
+			)
+		})}
+	</Transition>
+)
+
+const RegionLabels = props => (
+	<Transition component="ul" className="labels" transitionName={ props.anim.name } transitionEnterTimeout={ props.anim.enter } transitionLeaveTimeout={ props.anim.leave }>
+		{ Object.keys(props.regions).slice(1).map(reg => {
+			const region = props.regions[ reg ]
+			const transform = `translate(${ region.label.left }px, ${ region.label.top }px)`
+			return (
+				<li key={ reg } className={ `label center ${ reg == props.region ? 'active' : '' } ${ props.region ? 'outline' : '' }` } style={{ transform }}>
+					<span>{ region.title[ props.lang ] }</span>
 				</li>
 			)
 		})}
@@ -88,8 +104,8 @@ class Map extends React.Component {
 
 		return (
 			<section id="map" ref="map" className="map" style={{ transform, transformOrigin }}>
-				{ this.props.children.slice(-1) }
-				<svg>
+				{ this.props.children.slice(-2) }
+				<svg className={ view && view.scale ? '' : 'overview' }>
 					<defs>
 						<clipPath id="svg-clip">
 							<path d="M0,34 C-18.778,34 -34,18.778 -34,0 C-34,-18.778 -18.778,-34 0,-34 C18.778,-34 34,-18.778 34,0 C34,18.778 18.778,34 0,34 Z M0,18 C9.941,18 18,9.941 18,0 C18,-9.941 9.941,-18 0,-18 C-9.941,-18 -18,-9.941 -18,0 C-18,9.941 -9.941,18 0,18 Z"></path>
@@ -107,5 +123,6 @@ export {
 	Image,
 	Regions,
 	Pois,
-	Labels
+	PoiLabels,
+	RegionLabels
 }

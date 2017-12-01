@@ -2,10 +2,10 @@ import React from 'react';
 import Transition from 'react-addons-css-transition-group';
 
 import { Titlebar, Content } from './Common'
-import { Map, Image, Regions, Pois, Labels } from './Map'
+import { Map, Image, Regions, Pois, PoiLabels, RegionLabels } from './Map'
 import { Sidebar, ArticleHeadline, ArticleDescription, RegionList, MapList, Thumbnails } from './Sidebar'
 import { Detail, PoiHeadline, PoiDescription, RegionHeadline, Actions, Gallery } from './Detail'
-import Toolbar from './Toolbar'
+import { Toolbar, Back } from './Toolbar'
 
 export default class App extends React.Component {
 	constructor() {
@@ -116,9 +116,10 @@ export default class App extends React.Component {
 			<div id="app">
 				<Map view={ view } onRender={ this.calculateView.bind(this) }>
 					<Image region={ region } map={ map } anim={ anim } />
-					<Regions region={ region } onRender={ this.calculateView.bind(this) } onClick={ region => this.setRegion(region) } />
+					<Regions region={ region } view={ view } onRender={ this.calculateView.bind(this) } onClick={ region => this.setRegion(region) } />
 					<Pois pois={ this.pois } poi={ poi } scale={ view.scale ? view.scale : 1 } onClick={ poi => this.setPoi(poi) } anim={ anim } />
-					<Labels pois={ this.pois } poi={ poi } scale={ view.scale ? view.scale : 1 } lang={ lang } anim={ anim } />
+					<RegionLabels regions={ data.regions } region={ region } lang={ lang } anim={ anim } />
+					<PoiLabels pois={ this.pois } poi={ poi } scale={ view.scale ? view.scale : 1 } lang={ lang } anim={ anim } />
 				</Map>
 
 				<Transition transitionName={ anim.name } transitionEnterTimeout={ anim.enter } transitionLeaveTimeout={ anim.leave }>
@@ -139,6 +140,9 @@ export default class App extends React.Component {
 							</Content>
 							<Toolbar onHomeClick={ this.handleHomeClick.bind(this) } onLangClick={ lang => this.setState({ lang }) } lang={ lang } />
 						</Sidebar>
+					}
+					{ region && !image &&
+						<Back onClick={ this.handleHomeClick.bind(this) } />
 					}
 					{ (poi || (region && image)) &&
 						<Detail key="detail" maximized={ image ? true : false }>

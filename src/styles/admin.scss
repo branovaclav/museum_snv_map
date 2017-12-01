@@ -186,6 +186,14 @@ textarea {
 			img {
 				width: 100%;
 			}
+
+			.pointer {
+				position: absolute;
+				width: 20px;
+				height: 20px;
+				margin: -10px 0 0 -10px;
+				background: url(data:image/gif;base64,R0lGODlhFAAUAJEAAP///wf5Af8lAAAAACH5BAEHAAEALAAAAAAUABQAAAI3jG+ggO0BhGCvxlmtpLld3h1f6G0kMj7LqmzsKsXyLLf0Xb+Lq2vYmTABIUJgylg8HZVJ0qpSAAA7) no-repeat;
+			}
 		}
 	}
 }

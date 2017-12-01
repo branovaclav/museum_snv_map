@@ -24,4 +24,15 @@ const Toolbar = props => (
 	</section>
 )
 
-export default Toolbar
+const Back = props => (
+	<section className="backbar hidden">
+		<ul className="actions">
+			<li><a className="icon return" onClick={ props.onClick }></a></li>
+		</ul>
+	</section>
+)
+
+export {
+	Toolbar,
+	Back
+}

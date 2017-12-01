@@ -59,7 +59,7 @@ app.set('views', path.join(root, 'src', 'views'));
 //app
 app.get('/data.js', (req, res) => {
 	filelists()
-	res.render('data.ejs', { pois: data.pois.all, articles: data.articles.all, maps: constants.maps, regions: constants.regions, lang });
+	res.render('data.ejs', { pois: data.pois.all, articles: data.articles.all, maps: constants.maps, regions: constants.regions, settings: constants.settings, lang });
 });
 
 //admin
@@ -76,8 +76,8 @@ app.post('/admin/upload/:id', upload.array('files'), (req, res) => {
 
 	let results = [];
 	req.files.forEach(file => results.push(
-		sharp(file.buffer).resize(undefined, constants.gallery.imageHeight).jpeg({ quality: 85 }).toFile(path.join(dir, file.originalname)),
-		sharp(file.buffer).resize(undefined, constants.gallery.thumbnailHeight).jpeg({ quality: 85 }).toFile(path.join(dir, util.thumbnailize(file.originalname)))
+		sharp(file.buffer).resize(undefined, constants.settings.photoHeight).jpeg({ quality: 85 }).toFile(path.join(dir, file.originalname)),
+		sharp(file.buffer).resize(undefined, constants.settings.thumbnailHeight).jpeg({ quality: 85 }).toFile(path.join(dir, util.thumbnailize(file.originalname)))
 	))
 	Promise.all(results)
 		.then(() => res.sendStatus(200))
@@ -123,12 +123,9 @@ app.listen(port, host, () => {
 });
 
 
-
-
-
 //seed
+/*
 app.get('/seed', (req, res) => {
-	/*
 	db.removeCollection('pois');
 	db.addCollection('pois').insert([
 		{
@@ -148,10 +145,9 @@ app.get('/seed', (req, res) => {
 			folder: 'nt_001'
 		}
 	]);
-	*/
+
 	db.removeCollection('articles');
-	db.addCollection('articles');
-/*	db.addCollection('articles');.insert([
+	db.addCollection('articles').insert([
 		{
 			title: { sk: 'Fauna Spiša', en: 'Spis Fauna' },
 			description: { sk: '', en: '' },
@@ -165,10 +161,11 @@ app.get('/seed', (req, res) => {
 			region: 'vysoke_tatry'
 		}
 	]);
-*/
+
 	db.saveDatabase('db');
 	res.redirect('/admin')
 });
+*/
 
 /*
 	let abcsort = (a, b) => {

@@ -223,8 +223,20 @@ let Picker = class {
 	}
 
 	toggle (show) {
-		if (show && this.el.region.val() && this.el.map.val())
+		if (show && this.el.region.val() && this.el.map.val()) {
 			this.el.picker.html(`<img src="/images/maps/${ this.el.map.val() }/${ this.el.region.val() }@1x.png" />`).show()
+			window.setTimeout(() => {
+				const region = this.el.region.find(':selected').data()
+				const coords = this.el.position.val().split(',')
+				if (coords.length == 2) {
+					const position = {
+						left: this.el.picker.width() * (coords[0] - region.left) / region.width,
+						top: this.el.picker.height() * (coords[1] - region.top) / region.height
+					}
+					$('<div class="pointer"></div>').css({ left: `${ position.left }px`, top: `${ position.top }px` }).appendTo(this.el.picker)
+				}					
+			}, 0.1 * 1000);
+		}
 		else
 			this.el.picker.hide()
 	}
@@ -235,7 +247,7 @@ let Picker = class {
 			left: region.left + region.width * (left - this.el.picker.offset().left) / this.el.picker.width(),
 			top: region.top + region.height * (top - this.el.picker.offset().top) / this.el.picker.height()
 		}
-		this.el.position.val(`${ Math.round(position.left) },${ Math.round(position.top) }`)
+		this.el.position.val(`${ Math.round(position.left * 10) / 10 },${ Math.round(position.top * 10) / 10 }`)
 	}
 };
 
@@ -244,6 +256,4 @@ $(window).on('load', () => {
 	new Articles();
 	new Pois();
 	new Picker();
-
-	// setTimeout(() => $('.button.edit').first().click(), 200);
 });
