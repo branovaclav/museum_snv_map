@@ -6,6 +6,7 @@ import { Map, Image, Regions, Pois, PoiLabels, RegionLabels } from './Map'
 import { Sidebar, ArticleHeadline, ArticleDescription, RegionList, MapList, Thumbnails } from './Sidebar'
 import { Detail, PoiHeadline, PoiDescription, RegionHeadline, Actions, Gallery } from './Detail'
 import { Toolbar, Back } from './Toolbar'
+import { Legend, About, DialogHeadline, AboutLogos, AboutDescription, AboutFooter } from './Dialog'
 
 export default class App extends React.Component {
 	constructor() {
@@ -106,7 +107,7 @@ export default class App extends React.Component {
 			enter: .005 * 1000, leave: .33 * 1000
 		}
 
-		let { region, map, poi, image, view, lang } = this.state
+		let { region, map, poi, image, view, legend, about, lang } = this.state
 
 		let article = data.articles[ region || 'all' ][ map || 'all' ]
 		if (article.title[ lang ].length == 0 && article.description[ lang ].length == 0)
@@ -138,7 +139,7 @@ export default class App extends React.Component {
 									<RegionList regions={ data.regions } onClick={ region => this.setRegion(region) } lang={ lang } />
 								}
 							</Content>
-							<Toolbar onHomeClick={ this.handleHomeClick.bind(this) } onLangClick={ lang => this.setState({ lang }) } lang={ lang } />
+							<Toolbar onHomeClick={ this.handleHomeClick.bind(this) } onAboutClick = { () => this.setState({ about: true }) } onLangClick={ lang => this.setState({ lang }) } lang={ lang } />
 						</Sidebar>
 					}
 					{ region && !image &&
@@ -162,6 +163,20 @@ export default class App extends React.Component {
 						</Detail>
 					}
 				</Transition>
+
+				{ about &&
+					<About>
+						<Titlebar>
+							<DialogHeadline title={ data.about.title } lang={ lang } />
+							<Actions onCloseClick={ () => this.setState({ about: false }) } />
+						</Titlebar>
+						<Content>
+							<AboutLogos />
+							<AboutDescription content={ data.about.content } lang={ lang } />
+							<AboutFooter text={ data.about.footer } lang={ lang } />
+						</Content>
+					</About>
+				}
 			</div>
         )
     }

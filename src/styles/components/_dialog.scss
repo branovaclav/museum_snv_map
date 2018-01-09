@@ -1,0 +1,90 @@
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	background-color: $overlay-color;
+	backdrop-filter: blur(10px);
+	z-index: 100;
+}
+
+.about {
+	max-width: 54%;
+	background-color: $panel-bkg-color;
+	box-shadow: 0 0 6px $shadow-color;
+
+	.titlebar {
+		display: flex;
+		justify-content: space-between;
+		margin: 25px;
+		margin-left: 40px;
+
+		.headline {
+			height: 56px;
+			text-transform: uppercase;
+			position: relative;
+			font: $semibold 3.6rem/1.8 'Relish Pro';
+		}
+
+		.actions {
+			.disabled { display: none; }
+		}
+	}
+
+	.content {
+		margin: 40px;
+		margin-top: 0;
+
+		.logos {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin-bottom: 25px;
+			padding-bottom: 32px;
+			border-bottom: solid 1px rgba($shadow-color, .12);
+
+			img {
+				margin: 0 20px;
+
+				&.muzeumspisa { height: 156px; }
+				&.fpu { height: 80px; }
+			}
+		}
+
+		.credentials {
+			li {
+				display: flex;
+				align-items: baseline;
+			}
+
+			label {
+				min-width: 282px;
+				margin-right: 20px;
+
+				color: $light-text-color;
+				font: $semibold 1.5rem/2 'Relish Pro';		
+				text-align: right;
+				text-transform: uppercase;				
+			}
+
+			p {
+				text-align: justify;
+			}
+		}
+
+		.footer {
+			color: $light-text-color;
+			text-align: center;
+
+			margin-top: 20px;
+			padding-top: 25px;
+			border-top: solid 1px rgba($shadow-color, .12);
+		}
+	}
+}

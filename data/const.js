@@ -93,6 +93,50 @@ module.exports = {
 		}
 	},
 
+	legend: {},
+
+	about: {
+		title: { sk: 'Príroda Spiša v kocke', en: 'Nature of Spiš' },
+		content: [
+			{
+				label: { sk: 'Autori textov', en: 'Authors of Text' },
+				value: 'Ing. Zuzana Krempaská, RNDr. Marta Nižnanská, RNDr. Pavol Chromý, Mgr. Denis Kuzl'
+			},
+			{
+				label: { sk: 'Korektúra', en: 'Revisioning' },
+				value: 'RNDr. Marta Nižnanská, Mgr. Erika Gibalová, RNDr. Pavol Chromý'
+			},
+			{
+				label: { sk: 'Administrátor textov a obrázkov', en: 'Text and Image Administration' },
+				value: 'Mgr. Denis Kuzl'
+			},
+			{
+				label: { sk: 'Digitálne spracovanie máp', en: 'Digital Map Processing' },
+				value: 'Ing. Vladimír Krempaský, Ing. Marek Leskovjanský'
+			},
+			{
+				label: { sk: 'Digitálna databáza (zdroj)', en: 'Digital Database (Sources)' },
+				value: 'Regionálne geomorfologické členenie Slovenska, 1 : 50 000 © 2009 Geografický ústav SAV, Bratislava\nDigitálny model reliéfu (DMR-3.5) © Geodetický a kartografický ústav, Bratislava\nGIS údaje – prvky a hranice prvkov ochrany prírody na území Spiša © Štátna ochrana prírody SR, Banská Bystrica, Správa Národného parku Slovenský raj, Spišská Nová Ves'
+			},
+			{
+				label: { sk: 'Autori fotografií', en: 'Authors of Photographs' },
+				value: 'Mgr. Peter Olekšák, RNDr. Zuzana Kyseľová, PhD., Miloš Greisel, Juraj Ksiažek, Pavol Tajboš, RNDr. Daniel Dítě, PhD., Mgr. Miloslav Galvánek, PhD., Ing. Martin Ceľuch, PhD., RNDr. Pavol Chromý, Ing. Zuzana Krempaská, RNDr. Marta Nižnanská, Mgr. Milan Barlog, Mgr. Iwona Wróbel, RNDr. Miroslav Fulín, CSc., František Divok, doc. RNDr. Ľubomír Panigaj, CSc., RNDr. Andrej Mock, PhD., doc. RNDr. Ľubomír Kováč, CSc., RNDr. Peter Ľuptáčik, PhD., Mgr. Ing. Blažena Sedláková, RNDr. Rudolf Šoltés, CSc., Mgr. Jozef Kormančík, Miroslav Lehocký, FotoNet, SOS/BirdLife Slovenska'
+			},
+			{
+				label: { sk: 'Užívateľské rozhranie a implementácia', en: 'User Interface and Implementation' },
+				value: 'Mgr. Branislav Václav'
+			},
+			{
+				label: { sk: 'Výtvarný a grafický návrh a realizácia', en: 'Art Design and Execution' },
+				value: 'Mgr. art . Peter Masár, Mgr. art. Dušan Veverka'
+			}
+		],
+		footer: {
+			sk: 'Projekt podporil z verejných zdrojov Fond na podporu umenia.',
+			en: 'The project was supported by the Public Fund for the Promotion of Art.'
+		}
+	},
+	
 	settings: {
 		hiDPI: false, // false: FullHD maps, true: 4K maps
 		photoHeight: 743,

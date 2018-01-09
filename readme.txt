@@ -8,4 +8,4 @@ Instalacia:
 Spustenie aplikacie:
 
 - nainstalovat prehliadac Google Chrome
-- spustit prehliadac z prikazoveho riadku: chrome.exe --kiosk --incognito --noerrdialogs --touch-events --disable-pinch --overscroll-history-navigation=0 --enable-overlay-scrollbar http://localhost:3000
+- spustit prehliadac z prikazoveho riadku: chrome.exe --kiosk --incognito --noerrdialogs --touch-events --disable-pinch --overscroll-history-navigation=0 --enable-overlay-scrollbar --enable-experimental-web-platform-features http://localhost:3000

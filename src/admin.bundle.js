@@ -60,12 +60,12 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 226);
+/******/ 	return __webpack_require__(__webpack_require__.s = 227);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 226:
+/***/ 227:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -81,7 +81,7 @@ var _util = __webpack_require__(35);
 
 var _util2 = _interopRequireDefault(_util);
 
-__webpack_require__(227);
+__webpack_require__(228);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -447,13 +447,13 @@ var Picker = function () {
 
 /***/ }),
 
-/***/ 227:
+/***/ 228:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(228);
+var content = __webpack_require__(229);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -479,7 +479,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 228:
+/***/ 229:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(55)(undefined);
