@@ -139,7 +139,7 @@ export default class App extends React.Component {
 									<RegionList regions={ data.regions } onClick={ region => this.setRegion(region) } lang={ lang } />
 								}
 							</Content>
-							<Toolbar onHomeClick={ this.handleHomeClick.bind(this) } onAboutClick = { () => this.setState({ about: true }) } onLangClick={ lang => this.setState({ lang }) } lang={ lang } />
+							<Toolbar onHomeClick={ this.handleHomeClick.bind(this) } onLegendClick = { () => this.setState({ legend: !legend }) } onAboutClick = { () => this.setState({ about: true }) } onLangClick={ lang => this.setState({ lang }) } lang={ lang } />
 						</Sidebar>
 					}
 					{ region && !image &&
@@ -161,6 +161,9 @@ export default class App extends React.Component {
 								<Gallery images={ poi ? data.pois[ poi ].filelist : data.regions[ region ].filelist } image={ image } texts={ poi ? data.pois[ poi ].filedata : data.articles[ region ].all.filedata } onClick={ this.setImage.bind(this) } lang={ lang } anim={ anim } />
 							</Content>
 						</Detail>
+					}
+					{ legend && !(poi || image) &&
+						<Legend labels={ data.legend[ Object.keys(data.legend).find(key => key.indexOf(map || 'all') >= 0) ] } lang={ lang } />
 					}
 				</Transition>
 

@@ -2,7 +2,17 @@ import React from 'react';
 
 const Legend = props => (
 	<section className="legend">
-		Map Legend (Work in progress)
+		<ul className="labels">
+			{ props.labels.map((item, index) => {
+				let color = item.code.charAt(0) == '#'
+				return (
+					<li key={ index }>
+						<div className={ `key ${ color ? 'color' : item.code }`} style={ color ? { backgroundColor: item.code } : {}}></div>
+						<label>{ item.label[ props.lang ] }</label>
+					</li>
+				)
+			})}
+		</ul>
 	</section>
 )
 

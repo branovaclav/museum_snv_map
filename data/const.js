@@ -93,7 +93,44 @@ module.exports = {
 		}
 	},
 
-	legend: {},
+	legend: {
+		'all, fauna, flora': [
+			{ code: '#EFF2D8', label: { sk: 'Tráva', en: '' }},
+			{ code: '#D9D491', label: { sk: 'Lúka', en: '' }},
+			{ code: '#C6B891', label: { sk: 'Orná pôda', en: '' }},
+			{ code: '#96A65B', label: { sk: 'Les', en: '' }},
+			{ code: '#93938F', label: { sk: 'Neúrodná pôda', en: '' }},
+			{ code: 'water', label: { sk: 'Vodné toky', en: '' }},
+			{ code: '#196FDF', label: { sk: 'Vodné plochy', en: '' }},
+		],
+		geology: [
+			{ code: 'boundary_found', label: { sk: 'Geologické hranice', en: '' }},
+			{ code: 'fault_found', label: { sk: 'Zlomy zistené', en: '' }},
+			{ code: 'fault_assumed', label: { sk: 'Zlomy predpokladané', en: '' }},
+			{ code: 'line_found', label: { sk: 'Príkrovové línie zistené', en: '' }},
+			{ code: 'line_assumed', label: { sk: 'Príkrovové línie predpokladané', en: '' }},
+			{ code: '#CA855F', label: { sk: 'Paleogén', en: '' }},
+			{ code: '#77994F', label: { sk: 'Krieda', en: '' }},
+			{ code: '#488199', label: { sk: 'Jura', en: '' }},
+			{ code: '#6C3051', label: { sk: 'Trias', en: '' }},
+			{ code: '#D75945', label: { sk: 'Perm', en: '' }},
+			{ code: '#81A9A7', label: { sk: 'Karbón', en: '' }},
+			{ code: '#A6784B', label: { sk: 'Devón', en: '' }},
+			{ code: '#3D7D6C', label: { sk: 'Ordovík', en: '' }},
+			{ code: '#788B61', label: { sk: 'Kambrium', en: '' }},
+			{ code: '#86A08B', label: { sk: 'Paleozoikum', en: '' }},
+			{ code: '#D34B74', label: { sk: 'Proterozoikum', en: '' }},
+		],
+		waters: [
+			{ code: 'water', label: { sk: 'Vodné toky', en: '' }},
+			{ code: '#196FDF', label: { sk: 'Vodné plochy', en: '' }},
+		],
+		reserves: [
+			{ code: '#688D1E', label: { sk: 'Chránené územia', en: '' }},
+			{ code: '#707037', label: { sk: 'Chránené vtáčie územia', en: '' }},
+			{ code: '#869B89', label: { sk: 'Ochranné pásma', en: '' }},
+		]
+	},
 
 	about: {
 		title: { sk: 'Príroda Spiša v kocke', en: 'Nature of Spiš' },

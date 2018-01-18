@@ -3,11 +3,8 @@ import React from 'react';
 const Actions = props => (
 	<ul className="actions">
 		<li><a className="icon home" onClick={ props.onHomeClick }></a></li>
+		<li><a className="icon colors" onClick={ props.onLegendClick }></a></li>
 		<li><a className="icon info" onClick={ props.onAboutClick }></a></li>
-		{/*
-		<li><a className="icon labels" onClick={ props.onLabelsClick }></a></li>
-		<li><a className="icon legend" onClick={ props.onLegendClick }></a></li>
-		*/}
 	</ul>
 )
 
@@ -20,7 +17,7 @@ const Languages = props => (
 
 const Toolbar = props => (
 	<section className="toolbar">
-		<Actions onHomeClick={ props.onHomeClick } onAboutClick={ props.onAboutClick } />
+		<Actions onHomeClick={ props.onHomeClick } onLegendClick={ props.onLegendClick } onAboutClick={ props.onAboutClick } />
 		<Languages lang={ props.lang } onClick={ props.onLangClick } />
 	</section>
 )

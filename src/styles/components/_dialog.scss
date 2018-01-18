@@ -1,3 +1,53 @@
+.legend {
+	position: fixed;
+	bottom: 25px;
+	left: 25px;
+
+	padding: 25px;
+	background-color: $panel-bkg-color;
+	box-shadow: 0 0 6px $shadow-color;
+	transition: transform $medium;
+	z-index: 1;
+
+	li {
+		line-height: 1.5;
+		clear: both;
+
+		& + li {
+			margin-top: 8px;
+		}
+
+		.key {
+			float: left;
+			width: 40px;
+			height: 20px;
+			background: url('/images/legend_lines.png') no-repeat;
+			border: solid 1px $shadow-color;
+
+			&.boundary_found { background-position: 0 0px; }
+			&.fault_found { background-position: 0 -30px; }
+			&.fault_assumed { background-position: 0 -60px; }
+			&.line_found { background-position: 0 -90px; }
+			&.line_assumed { background-position: 0 -120px; }
+			&.water { background-position: 0 -150px; }
+			&.color { background-image: none; }
+		}
+
+		label {
+			display: block;
+			margin-left: 52px;
+		}
+	}
+
+	.actions {
+		float: right;
+	}
+
+	&.hidden {
+		transform: translate(calc(-100% - 25px), 0);
+	}
+}
+
 .overlay {
 	position: fixed;
 	top: 0;
