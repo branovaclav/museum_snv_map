@@ -35902,7 +35902,7 @@ var Gallery = function (_React$Component) {
 		key: 'componentDidUpdate',
 		value: function componentDidUpdate(prevProps) {
 			var thumbnails = this.refs.thumbnails;
-			var thumbnail = this.props.image ? thumbnails.querySelector('[src*="' + _util2.default.thumbnailize(this.props.image) + '"]').parentNode.parentNode : null;
+			var thumbnail = this.props.image ? thumbnails.querySelector('[src*="' + _util2.default.filenamize(_util2.default.thumbnailize(this.props.image)) + '"]').parentNode.parentNode : null;
 
 			if (thumbnail && thumbnails.scrollLeft > thumbnail.offsetLeft) (0, _jquery2.default)(thumbnails).animate({ scrollLeft: thumbnail.offsetLeft }, .33 * 1000);
 			if (thumbnail && thumbnails.scrollLeft + thumbnails.offsetWidth - thumbnail.offsetWidth < thumbnail.offsetLeft) (0, _jquery2.default)(thumbnails).animate({ scrollLeft: thumbnail.offsetLeft - (thumbnails.offsetWidth - thumbnail.offsetWidth) }, .33 * 1000);

@@ -8,7 +8,7 @@ let data = {
 				map:  '<%- poi.map %>',
 				region: '<%- poi.region %>',
 				label: '<%- poi.label %>',
-				filelist: [<%- poi.filelist.map(file => `'${ file }'`).join(', ') %>],
+				filelist: <%- JSON.stringify(poi.filelist) %>,
 				filedata: <%- poi.filedata ? JSON.stringify(poi.filedata) : 'null' %>
 			},
 		<% } %>

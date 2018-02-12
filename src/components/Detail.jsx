@@ -39,7 +39,7 @@ const Actions = props => {
 class Gallery extends React.Component {
 	componentDidUpdate(prevProps) {
 		const thumbnails = this.refs.thumbnails
-		const thumbnail = this.props.image ? thumbnails.querySelector(`[src*="${ util.thumbnailize(this.props.image) }"]`).parentNode.parentNode : null;
+		const thumbnail = this.props.image ? thumbnails.querySelector(`[src*="${ util.filenamize(util.thumbnailize(this.props.image)) }"]`).parentNode.parentNode : null;
 
 		if (thumbnail && thumbnails.scrollLeft > thumbnail.offsetLeft)
 			$(thumbnails).animate({ scrollLeft: thumbnail.offsetLeft }, .33 * 1000);
